@@ -1,0 +1,5 @@
+.DS_Store
+tmp/
+images/art/works/square-medium/added-*
+.env
+.env.*

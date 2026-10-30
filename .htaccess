@@ -1,0 +1,4 @@
+Options -Indexes
+<FilesMatch "^[.]|^(config[.]php)$|[.](sql|md|py|sh|zip)$">
+    Require all denied
+</FilesMatch>
