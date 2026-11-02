@@ -19,6 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
         $painting = $stmt->get_result()->fetch_assoc();
         if ($painting) {
+            $stmt = $db->prepare('DELETE FROM PaintingGenres WHERE PaintingID = ?');
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
             $stmt = $db->prepare('DELETE FROM Paintings WHERE PaintingID = ?');
             $stmt->bind_param('i', $id);
             $stmt->execute();

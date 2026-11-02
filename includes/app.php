@@ -98,7 +98,7 @@ function art_header(string $title, string $active = 'collection'): void
         . '</title><link rel="stylesheet" href="assets/gallery.css"></head><body>'
         . '<h1>' . art_h($title) . '</h1><nav>';
     if ($customer) {
-        echo '<a href="art-main.php">Art Gallery</a> | <a href="artists.php">Artists</a> | <form class="logout-form" action="art-add.php" method="get"><button type="submit">ADD artwork</button></form> | '
+        echo '<a href="art-main.php">Art Gallery</a> | <a href="artists.php">Artists</a> | <a href="genres.php">Painting genres</a> | <form class="logout-form" action="art-add.php" method="get"><button type="submit">ADD artwork</button></form> | '
             . art_h($customer['first_name'] . ' ' . $customer['last_name'])
             . ' (' . art_h($customer['userid']) . ') '
             . '<form class="logout-form" action="logout.php" method="post"><input type="hidden" name="csrf" value="' . art_h(art_token()) . '">'

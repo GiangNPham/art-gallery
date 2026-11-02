@@ -6,6 +6,9 @@ Thai Tong · vxt220041 · Team 42
 
 ## Pages
 
+- `genres.php`: view painting genres, descriptions and painting counts.
+- `genre-add.php`: add a genre with a unique name and optional description.
+- `genre-delete.php`: confirm deletion; blocks deletion while any existing painting is linked through `PaintingGenres`, including on direct POST requests. Unused stale associations are removed with the genre.
 - `artists.php`: view artists and their painting counts, with links to add and delete artists.
 - `artist-add.php`: add an artist with a required last name and optional first name, nationality and birth/death years.
 - `artist-delete.php`: confirm deletion; artists with paintings cannot be deleted. The check also runs on submission.
