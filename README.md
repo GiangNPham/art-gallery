@@ -6,6 +6,9 @@ Thai Tong · vxt220041 · Team 42
 
 ## Pages
 
+- `artists.php`: view artists and their painting counts, with links to add and delete artists.
+- `artist-add.php`: add an artist with a required last name and optional first name, nationality and birth/death years.
+- `artist-delete.php`: confirm deletion; artists with paintings cannot be deleted. The check also runs on submission.
 - `art-login.php`: User ID/password form.
 - `authenticate.php`: checks Lab14 `Customers` and `CustomerLogon`, then opens `art-main.php`.
 - `art-main.php`: basic painting table, artist selection, ADD link and Delete links.

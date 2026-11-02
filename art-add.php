@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db->begin_transaction();
         try {
             $stmt = $db->prepare("SELECT ArtistID FROM Artists
-                WHERE LOWER(TRIM(CONCAT_WS(' ', FirstName, LastName))) = LOWER(?) LIMIT 1");
+                WHERE LOWER(TRIM(CONCAT_WS(' ', FirstName, LastName))) = LOWER(?) LIMIT 1 FOR UPDATE");
             $stmt->bind_param('s', $values['artist']);
             $stmt->execute();
             $artistId = $stmt->get_result()->fetch_column();
