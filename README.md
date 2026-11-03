@@ -6,6 +6,7 @@ Thai Tong · vxt220041 · Team 42
 
 ## Pages
 
+- `genres.php`, `genre-detail.php`, `genre-add.php`, `genre-delete.php`: dedicated Genres list, details, add and protected delete pages. See `GENRES.md` for module documentation and manual test cases.
 - `eras.php`: view and search eras by name or year range, with links to details, update and delete.
 - `era-detail.php`: view one era's complete name and year information.
 - `era-add.php`: add an era after validating its name and years and checking for a duplicate name.

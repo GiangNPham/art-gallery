@@ -98,11 +98,12 @@ function art_header(string $title, string $active = 'collection'): void
         . '</title><link rel="stylesheet" href="assets/gallery.css"></head><body>'
         . '<h1>' . art_h($title) . '</h1><nav>';
     if ($customer) {
-        echo '<a href="art-main.php">Art Gallery</a> | <a href="artists.php">Artists</a> | <a href="painting-genres.php">Painting genres</a> | <a href="eras.php">Eras</a> | <form class="logout-form" action="art-add.php" method="get"><button type="submit">ADD artwork</button></form> | '
+        echo '<div class="nav-links"><a href="art-main.php">Art Gallery</a> | <a href="artists.php">Artists</a> | <a href="painting-genres.php">Painting genres</a> | <a href="eras.php">Eras</a> | <a href="genres.php">Genres</a></div>'
+            . '<div class="nav-account"><form class="logout-form" action="art-add.php" method="get"><button type="submit">ADD artwork</button></form><span>'
             . art_h($customer['first_name'] . ' ' . $customer['last_name'])
-            . ' (' . art_h($customer['userid']) . ') '
+            . ' (' . art_h($customer['userid']) . ')</span>'
             . '<form class="logout-form" action="logout.php" method="post"><input type="hidden" name="csrf" value="' . art_h(art_token()) . '">'
-            . '<button type="submit">Sign out</button></form>';
+            . '<button type="submit">Sign out</button></form></div>';
     } else {
         echo '<a aria-current="page" href="art-login.php">Customer sign in</a>';
     }

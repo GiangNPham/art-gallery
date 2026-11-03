@@ -1,6 +1,7 @@
 body { font-family: Arial, sans-serif; margin: 24px; color: #222; background: white; }
 h1 { font-size: 26px; }
-nav { margin-bottom: 24px; }
+nav { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+.nav-account { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-left: auto; }
 a { color: #0645ad; }
 table { border-collapse: collapse; width: 100%; margin-top: 16px; }
 th, td { border: 1px solid #aaa; padding: 8px; text-align: left; }
