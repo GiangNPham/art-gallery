@@ -277,8 +277,9 @@ INSERT INTO `Customers` (`CustomerID`, `FirstName`, `LastName`, `Address`, `City
 DROP TABLE IF EXISTS `Eras`;
 
 CREATE TABLE `Eras` (
-  `EraName` VARCHAR(255), 
-  `EraYears` VARCHAR(255)
+  `EraName` VARCHAR(255) NOT NULL,
+  `EraYears` VARCHAR(255),
+  PRIMARY KEY (`EraName`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 
 SET autocommit=1;

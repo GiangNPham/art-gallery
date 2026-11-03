@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param('ss', $name, $description);
             $stmt->execute();
             $_SESSION['flash'] = 'Genre added.';
-            header('Location: genres.php', true, 303);
+            header('Location: painting-genres.php', true, 303);
             exit;
         } catch (mysqli_sql_exception $exception) {
             if ($exception->getCode() !== 1062) throw $exception;
@@ -34,10 +34,10 @@ art_header('Add genre');
 <?php if ($errors): ?><div class="error" role="alert"><ul>
     <?php foreach ($errors as $error): ?><li><?= art_h($error) ?></li><?php endforeach; ?>
 </ul></div><?php endif; ?>
-<form method="post" action="genre-add.php">
+<form method="post" action="painting-genre-add.php">
     <input type="hidden" name="csrf" value="<?= art_h(art_token()) ?>">
     <p><label>Genre name: <input name="name" maxlength="50" required value="<?= art_h($name) ?>"></label></p>
     <p><label>Description (optional):<br><textarea name="description" rows="6" cols="60" maxlength="10000"><?= art_h($description) ?></textarea></label></p>
-    <button type="submit">ADD genre</button> <a href="genres.php">Cancel</a>
+    <button type="submit">ADD genre</button> <a href="painting-genres.php">Cancel</a>
 </form>
 <?php art_footer(); ?>

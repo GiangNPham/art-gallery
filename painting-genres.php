@@ -8,7 +8,7 @@ $genres = art_db()->query('SELECT g.GenreID, g.GenreName, g.Description,
     GROUP BY g.GenreID, g.GenreName, g.Description ORDER BY g.GenreName');
 art_header('Painting genres');
 ?>
-<p><a href="genre-add.php">ADD genre</a></p>
+<p><a href="painting-genre-add.php">ADD genre</a></p>
 <table>
     <thead><tr><th>Name</th><th>Description</th><th>Paintings</th><th>Delete</th></tr></thead>
     <tbody>
@@ -17,7 +17,7 @@ art_header('Painting genres');
             <td><?= art_h($genre['GenreName']) ?></td>
             <td><?= nl2br(art_h(art_text($genre['Description'] ?? ''))) ?></td>
             <td><?= (int) $genre['PaintingCount'] ?></td>
-            <td><a href="genre-delete.php?id=<?= (int) $genre['GenreID'] ?>">Delete</a></td>
+            <td><a href="painting-genre-delete.php?id=<?= (int) $genre['GenreID'] ?>">Delete</a></td>
         </tr>
     <?php endforeach; ?>
     </tbody>
