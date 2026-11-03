@@ -6,9 +6,14 @@ Thai Tong · vxt220041 · Team 42
 
 ## Pages
 
-- `genres.php`: view painting genres, descriptions and painting counts.
-- `genre-add.php`: add a genre with a unique name and optional description.
-- `genre-delete.php`: confirm deletion; blocks deletion while any existing painting is linked through `PaintingGenres`, including on direct POST requests. Unused stale associations are removed with the genre.
+- `eras.php`: view and search eras by name or year range, with links to details, update and delete.
+- `era-detail.php`: view one era's complete name and year information.
+- `era-add.php`: add an era after validating its name and years and checking for a duplicate name.
+- `era-update.php`: update an era's years while keeping its identifying name unchanged.
+- `era-delete.php`: confirm and delete an era.
+- `painting-genres.php`: view painting genres, descriptions and painting counts.
+- `painting-genre-add.php`: add a genre with a unique name and optional description.
+- `painting-genre-delete.php`: confirm deletion; blocks deletion while any existing painting is linked through `PaintingGenres`, including on direct POST requests. Unused stale associations are removed with the genre.
 - `artists.php`: view artists and their painting counts, with links to add and delete artists.
 - `artist-add.php`: add an artist with a required last name and optional first name, nationality and birth/death years.
 - `artist-delete.php`: confirm deletion; artists with paintings cannot be deleted. The check also runs on submission.

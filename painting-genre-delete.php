@@ -47,7 +47,7 @@ try {
         $db->commit();
         if (!$error) {
             $_SESSION['flash'] = $genre ? 'Genre deleted.' : 'That genre has already been removed.';
-            header('Location: genres.php', true, 303);
+            header('Location: painting-genres.php', true, 303);
             exit;
         }
     }
@@ -61,12 +61,12 @@ art_header('Delete genre');
 <p><?= art_h($genre['GenreName']) ?></p>
 <?php if ($error): ?>
     <p class="error" role="alert"><?= art_h($error) ?></p>
-    <p><a href="genres.php">Back to Painting genres</a></p>
+    <p><a href="painting-genres.php">Back to Painting genres</a></p>
 <?php else: ?>
     <p>Delete this genre?</p>
-    <form method="post" action="genre-delete.php?id=<?= $id ?>">
+    <form method="post" action="painting-genre-delete.php?id=<?= $id ?>">
         <input type="hidden" name="csrf" value="<?= art_h(art_token()) ?>">
-        <button type="submit">Delete genre</button> <a href="genres.php">Keep genre</a>
+        <button type="submit">Delete genre</button> <a href="painting-genres.php">Keep genre</a>
     </form>
 <?php endif; ?>
 <?php art_footer(); ?>
