@@ -6,6 +6,10 @@ Thai Tong · vxt220041 · Team 42
 
 ## Pages
 
+- `galleries.php`: list galleries and their painting counts.
+- `gallery-detail.php`: view a gallery's details and linked paintings.
+- `gallery-add.php`: add a gallery.
+- `gallery-delete.php`: confirm deletion and block it while paintings reference the gallery.
 - `genres.php`, `genre-detail.php`, `genre-add.php`, `genre-delete.php`: dedicated Genres list, details, add and protected delete pages. See `GENRES.md` for module documentation and manual test cases.
 - `eras.php`: view and search eras by name or year range, with links to details, update and delete.
 - `era-detail.php`: view one era's complete name and year information.
@@ -15,6 +19,9 @@ Thai Tong · vxt220041 · Team 42
 - `painting-genres.php`: view painting genres, descriptions and painting counts.
 - `painting-genre-add.php`: add a genre with a unique name and optional description.
 - `painting-genre-delete.php`: confirm deletion; blocks deletion while any existing painting is linked through `PaintingGenres`, including on direct POST requests. Unused stale associations are removed with the genre.
+- `painting-subjects.php`: view each subject's painting count and the individual painting-subject links.
+- `painting-subject-add.php`: link a painting to a subject after validating both IDs and checking for a duplicate link.
+- `painting-subject-delete.php`: confirm and remove only the selected painting-subject link.
 - `artists.php`: view artists and their painting counts, with links to add and delete artists.
 - `artist-add.php`: add an artist with a required last name and optional first name, nationality and birth/death years.
 - `artist-delete.php`: confirm deletion; artists with paintings cannot be deleted. The check also runs on submission.
@@ -27,6 +34,8 @@ Thai Tong · vxt220041 · Team 42
 - `logout.php`: Sign out. `index.php` and `artwork.php` open the gallery.
 
 All gallery operations require login. The four accounts are `user1/pass1` through `user4/pass4`; their names are `first1 last1` through `first4 last4`. Password hashes, prepared statements and existing form tokens are retained.
+
+The supplied `Subjects` table has names but no `SubjectID` column, while `PaintingSubjects` stores numeric subject IDs. The painting subject pages use the original `art-small.sql` seed order to label IDs when the database still contains those 21 names; otherwise they show subject numbers. If the Subjects module later adds a `SubjectID` column, these pages use it directly. Until then, subject IDs are validated against the count of rows in `Subjects`; the database itself cannot enforce that relationship.
 
 ## Application flow
 

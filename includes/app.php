@@ -98,7 +98,7 @@ function art_header(string $title, string $active = 'collection'): void
         . '</title><link rel="stylesheet" href="assets/gallery.css"></head><body>'
         . '<h1>' . art_h($title) . '</h1><nav>';
     if ($customer) {
-        echo '<div class="nav-links"><a href="art-main.php">Art Gallery</a> | <a href="artists.php">Artists</a> | <a href="painting-genres.php">Painting genres</a> | <a href="eras.php">Eras</a> | <a href="genres.php">Genres</a></div>'
+        echo '<div class="nav-links"><a href="art-main.php">Art Gallery</a> | <a href="artists.php">Artists</a> | <a href="galleries.php">Galleries</a> | <a href="painting-genres.php">Painting genres</a> | <a href="painting-subjects.php">Painting subjects</a> | <a href="eras.php">Eras</a> | <a href="genres.php">Genres</a></div>'
             . '<div class="nav-account"><form class="logout-form" action="art-add.php" method="get"><button type="submit">ADD artwork</button></form><span>'
             . art_h($customer['first_name'] . ' ' . $customer['last_name'])
             . ' (' . art_h($customer['userid']) . ')</span>'
