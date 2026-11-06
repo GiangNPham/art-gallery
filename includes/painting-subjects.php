@@ -1,6 +1,18 @@
 <?php
 require_once __DIR__ . '/app.php';
 
+function art_subject_seed(): array
+{
+    return [
+        1 => 'Animals', 2 => 'Landscape', 3 => 'Music', 4 => 'Sports',
+        5 => 'Abstract', 6 => 'Transportation', 7 => 'Architecture',
+        8 => 'Religion', 9 => 'Still Life', 10 => 'People',
+        11 => 'Botanical', 12 => 'Cuisine', 13 => 'History', 14 => 'Love',
+        15 => 'Family', 16 => 'Performing Arts', 17 => 'Allegory',
+        18 => 'Mythological', 19 => 'Power', 20 => 'Military', 21 => 'Abstract',
+    ];
+}
+
 // The supplied Subjects table has no SubjectID column. Its seed rows correspond
 // to the 1-based IDs stored in PaintingSubjects. Use real IDs if the table gains them.
 function art_subjects_have_ids(mysqli $db): bool
@@ -22,14 +34,7 @@ function art_subject_options(mysqli $db): array
     } else {
         // The original art-small.sql inserts these names in SubjectID order.
         // Confirm the current table still contains the same seed names before labeling IDs.
-        $seed = [
-            1 => 'Animals', 2 => 'Landscape', 3 => 'Music', 4 => 'Sports',
-            5 => 'Abstract', 6 => 'Transportation', 7 => 'Architecture',
-            8 => 'Religion', 9 => 'Still Life', 10 => 'People',
-            11 => 'Botanical', 12 => 'Cuisine', 13 => 'History', 14 => 'Love',
-            15 => 'Family', 16 => 'Performing Arts', 17 => 'Allegory',
-            18 => 'Mythological', 19 => 'Power', 20 => 'Military', 21 => 'Abstract',
-        ];
+        $seed = art_subject_seed();
         $names = array_column($db->query('SELECT SubjectName FROM Subjects')->fetch_all(MYSQLI_ASSOC), 'SubjectName');
         $actual = array_count_values($names);
         $expected = array_count_values(array_values($seed));

@@ -7,43 +7,46 @@ if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'HEAD'], true)) {
 }
 $db = art_db();
 $subjects = art_subject_options($db);
-$counts = [];
-$countRows = $db->query('SELECT ps.SubjectID, COUNT(DISTINCT p.PaintingID) AS PaintingCount
-    FROM PaintingSubjects ps LEFT JOIN Paintings p ON p.PaintingID = ps.PaintingID
-    GROUP BY ps.SubjectID');
-foreach ($countRows as $row) $counts[(int) $row['SubjectID']] = (int) $row['PaintingCount'];
-$assignments = $db->query('SELECT ps.PaintingSubjectID, ps.PaintingID, ps.SubjectID, p.Title
+$assignments = $db->query('SELECT ps.PaintingSubjectID, ps.PaintingID, ps.SubjectID, p.Title, p.ImageFileName
     FROM PaintingSubjects ps LEFT JOIN Paintings p ON p.PaintingID = ps.PaintingID
     ORDER BY p.Title, ps.PaintingID, ps.SubjectID, ps.PaintingSubjectID');
+$paintings = [];
+foreach ($assignments as $assignment) {
+    $paintingId = (int) $assignment['PaintingID'];
+    if (!isset($paintings[$paintingId])) {
+        $paintings[$paintingId] = [
+            'PaintingID' => $paintingId,
+            'Title' => $assignment['Title'],
+            'ImageFileName' => $assignment['ImageFileName'],
+            'subjects' => [],
+        ];
+    }
+    $paintings[$paintingId]['subjects'][] = $assignment;
+}
 art_header('Painting subjects');
 ?>
 <p><a href="painting-subject-add.php">ADD painting subject</a></p>
-<table>
-    <thead><tr><th>Subject</th><th>Paintings</th></tr></thead>
-    <tbody>
-    <?php foreach ($subjects as $subjectId => $subjectName): ?>
-        <tr data-subject-id="<?= $subjectId ?>">
-            <td><?= art_h($subjectName) ?></td>
-            <td><?= $counts[$subjectId] ?? 0 ?></td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
-<?php if (!$subjects): ?><p>No subjects found.</p><?php endif; ?>
 <h2>Painting links</h2>
 <table>
-    <thead><tr><th>Painting</th><th>Subject</th><th>Delete</th></tr></thead>
+    <thead><tr><th>Image</th><th>Title</th><th>Subject</th><th>Delete</th></tr></thead>
     <tbody>
-    <?php foreach ($assignments as $assignment): ?>
-        <tr data-painting-subject-id="<?= (int) $assignment['PaintingSubjectID'] ?>">
-            <td><?php if ($assignment['Title'] !== null): ?>
-                <a href="art-detail.php?id=<?= (int) $assignment['PaintingID'] ?>"><?= art_h($assignment['Title']) ?></a>
-            <?php else: ?>Missing painting #<?= (int) $assignment['PaintingID'] ?><?php endif; ?></td>
-            <td><?= art_h($subjects[(int) $assignment['SubjectID']] ?? 'Unknown subject #' . (int) $assignment['SubjectID']) ?></td>
+    <?php foreach ($paintings as $painting): ?>
+    <?php foreach ($painting['subjects'] as $index => $assignment): ?>
+        <tr>
+            <?php if ($index === 0): ?>
+            <td rowspan="<?= count($painting['subjects']) ?>"><?php if ($painting['Title'] !== null): ?>
+                <a href="art-detail.php?id=<?= (int) $painting['PaintingID'] ?>"><img src="<?= art_h(art_image($painting['ImageFileName'])) ?>" alt="<?= art_h($painting['Title']) ?>" width="80" height="80" loading="lazy"></a>
+            <?php else: ?>No image available.<?php endif; ?></td>
+            <td rowspan="<?= count($painting['subjects']) ?>"><?php if ($painting['Title'] !== null): ?>
+                <a href="art-detail.php?id=<?= (int) $painting['PaintingID'] ?>"><?= art_h($painting['Title']) ?></a>
+            <?php else: ?>Missing painting #<?= (int) $painting['PaintingID'] ?><?php endif; ?></td>
+            <?php endif; ?>
+            <td><a href="subject-detail.php?id=<?= (int) $assignment['SubjectID'] ?>"><?= art_h($subjects[(int) $assignment['SubjectID']] ?? 'Unknown subject #' . (int) $assignment['SubjectID']) ?></a></td>
             <td><a href="painting-subject-delete.php?id=<?= (int) $assignment['PaintingSubjectID'] ?>">Delete</a></td>
         </tr>
     <?php endforeach; ?>
+    <?php endforeach; ?>
     </tbody>
 </table>
-<?php if (!$assignments->num_rows): ?><p>No painting subjects found.</p><?php endif; ?>
+<?php if (!$paintings): ?><p>No painting subjects found.</p><?php endif; ?>
 <?php art_footer(); ?>

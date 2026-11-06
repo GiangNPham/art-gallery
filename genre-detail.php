@@ -3,10 +3,10 @@ require_once __DIR__ . '/includes/app.php';
 art_require_login();
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'HEAD'], true)) {
     header('Allow: GET, HEAD');
-    art_error(405, 'Method not allowed', 'Choose a genre from the Genres page.');
+    art_error(405, 'Method not allowed', 'Choose a genre from the Painting genres page.');
 }
 $id = art_id($_GET['id'] ?? null);
-if (!$id) art_error(400, 'Choose a genre', 'Choose a genre from the Genres page.');
+if (!$id) art_error(400, 'Choose a genre', 'Choose a genre from the Painting genres page.');
 $stmt = art_db()->prepare('SELECT GenreID, GenreName, Description, Link FROM Genres WHERE GenreID = ?');
 $stmt->bind_param('i', $id);
 $stmt->execute();
@@ -36,5 +36,5 @@ art_header('Genre details');
 <?php endforeach; ?>
 </ul>
 <?php else: ?><p>No paintings are linked to this genre.</p><?php endif; ?>
-<p><a href="genre-delete.php?id=<?= $id ?>">Delete genre</a> | <a href="genres.php">Back to Genres</a></p>
+<p><a href="genre-delete.php?id=<?= $id ?>">Delete genre</a> | <a href="painting-genres.php">Back to Painting genres</a></p>
 <?php art_footer(); ?>
