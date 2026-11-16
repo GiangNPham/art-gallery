@@ -1,0 +1,333 @@
+{
+    "generated_at": "2026-11-16T23:49:27+01:00",
+    "ready_for_import": true,
+    "artists": [
+        {
+            "slug": "edouard-manet",
+            "requested_name": "Edouard Manet",
+            "name": "Edouard Manet",
+            "source": "https://www.wikiart.org/en/edouard-manet",
+            "birth_date": "January 23, 1832",
+            "death_date": "April 30, 1883",
+            "nationality": "French",
+            "biography": "A pivotal figure in the transition from Realism to Impressionism, Edouard Manet was an influential painter who left his own unique mark on the art world. As a child, his father was a judge, who wanted him to pursue a career in law, but his uncle, recognizing little Edouard’s talents, encouraged his interest in art, often taking him the Louvre. It was not until Manet failed two entrance exams into the French Navy that his father relented to his son’s wishes and allowed him to start art lessons under the academic painter Thomas Couture, who had him copy the works of the great masters in the Louvre. The young artist was also influenced by Frans Hals, Diego Velazquez, and Francisco Goya. In 1856, in his early thirties, Manet opened his own studio. He began painting in a quasi-realist style, which transitioned to a more Impressionist style when he met the painter Berthe Morisot, who exposed him to her circle of Impressionist painter friends, including Claude Monet, Pierre-Auguste Renoir, and Edgar Degas, and their plein air painting techniques. Many of Manet’s works revolved around depictions of leisure activities, including observations of social life in all of the classes, from bourgeois horse racing to prostitutes drinking, to the streets of Paris and boating scenes, many of which were made from sketches done on the spot. Although his work was Impressionistic, he resisted involvement with any specific style of painting, and thus preferred to present his works to the Salon of Paris rather than the many Impressionist Exhibitions. In 1875, some of his paintings were included in a book-length edition of Edgar Allen Poe’s The Raven and in 1881, he was awarded the Legion of Honor by the French government. Manet died eleven days after the amputation of his left foot due to gangrene, from complications of syphilis and rheumatism, which had been so bad as to cause partial paralysis in the years leading up to his death.",
+            "pages": [
+                "Edouard Manet - 235 artworks - painting (11_16_2026 3：59：32 PM).html",
+                "Edouard Manet - 235 artworks - painting (11_16_2026 4：26：35 PM).html"
+            ],
+            "paintings": [
+                {
+                    "title": "Pierrot dancing",
+                    "year": 1849,
+                    "year_text": "1849",
+                    "source": "https://www.wikiart.org/en/edouard-manet/pierrot-dancing-1849",
+                    "image_stem": "t9_a702d1a8d4f28bd1755024c92f6a7850",
+                    "extension": "jpg",
+                    "saved_page": "Edouard Manet - 235 artworks - painting (11_16_2026 3：59：32 PM).html",
+                    "genres": [],
+                    "description": null,
+                    "medium": null,
+                    "dimensions": null,
+                    "style": null,
+                    "original_title": null,
+                    "detail_page": null,
+                    "date_text": null
+                },
+                {
+                    "title": "The barque of Dante (Copy after Delacroix)",
+                    "year": 1854,
+                    "year_text": "1854",
+                    "source": "https://www.wikiart.org/en/edouard-manet/the-barque-of-dante-copy-after-delacroix-1854",
+                    "image_stem": "t9_ba52f920544b80db1fb5f5ae081d0100",
+                    "extension": "jpg",
+                    "saved_page": "Edouard Manet - 235 artworks - painting (11_16_2026 3：59：32 PM).html",
+                    "genres": [],
+                    "description": null,
+                    "medium": null,
+                    "dimensions": null,
+                    "style": null,
+                    "original_title": null,
+                    "detail_page": null,
+                    "date_text": null
+                },
+                {
+                    "title": "A woman pouring water (Study of Suzanne Leenhoff)",
+                    "year": 1858,
+                    "year_text": "1858",
+                    "source": "https://www.wikiart.org/en/edouard-manet/a-woman-pouring-water-study-of-suzanne-leenhoff-1858",
+                    "image_stem": "t9_536d18f6f477f95aaa02ab1fcd812627",
+                    "extension": "jpg",
+                    "saved_page": "Edouard Manet - 235 artworks - painting (11_16_2026 3：59：32 PM).html",
+                    "genres": [],
+                    "description": null,
+                    "medium": null,
+                    "dimensions": null,
+                    "style": null,
+                    "original_title": null,
+                    "detail_page": null,
+                    "date_text": null
+                },
+                {
+                    "title": "Study of trees",
+                    "year": 1859,
+                    "year_text": "1859",
+                    "source": "https://www.wikiart.org/en/edouard-manet/study-of-trees-1859",
+                    "image_stem": "t9_c37b8e122a106ea5dfcea99b08fa4e14",
+                    "extension": "jpg",
+                    "saved_page": "Edouard Manet - 235 artworks - painting (11_16_2026 3：59：32 PM).html",
+                    "genres": [],
+                    "description": null,
+                    "medium": null,
+                    "dimensions": null,
+                    "style": null,
+                    "original_title": null,
+                    "detail_page": null,
+                    "date_text": null
+                },
+                {
+                    "title": "The absinthe drinker",
+                    "year": 1859,
+                    "year_text": "1859",
+                    "source": "https://www.wikiart.org/en/edouard-manet/the-absinthe-drinker-1859",
+                    "image_stem": "t9_289e27a560654c5278ff4e3fbd697f9a",
+                    "extension": "jpg",
+                    "saved_page": "Edouard Manet - 235 artworks - painting (11_16_2026 3：59：32 PM).html",
+                    "genres": [],
+                    "description": null,
+                    "medium": null,
+                    "dimensions": null,
+                    "style": null,
+                    "original_title": null,
+                    "detail_page": null,
+                    "date_text": null
+                }
+            ],
+            "issues": []
+        },
+        {
+            "slug": "le-pho",
+            "requested_name": "Lê Phổ",
+            "name": "Le Pho",
+            "source": "https://www.wikiart.org/en/le-pho",
+            "birth_date": "August 2, 1907",
+            "death_date": "2001",
+            "nationality": "French",
+            "biography": "Lê Phổ (2 August 1907 - 12 December 2001) was a Vietnamese painter. From 1925 until 1930, Le Pho studied at the Ecole des Beaux-Arts of Hanoi. At this point, he earned a scholarship to study at the École des Beaux-Arts in Paris, and he studied there for the next two years under the instruction of Victor Tardieu, a friend and companion of Henri Matisse. Upon returning to Vietnam he taught at the École Supérieure des Beaux Arts de l'Indochine in Hanoi. In 1937, he gave up his professorship to return to Paris as a part of the International Exposition in Paris as both a delegate and a member of the exposition’s jury. In 1938, he had his first one-man show in Paris, a show which marked the beginning of his successful artistic career in Europe. He would go on to show his art across France in Paris, Nice, Lyon, and Rouen, as well as in Morocco, Brussels in Europe, and in New York. Le Pho’s work is often divided into three distinct styles. The first style is from his period in Hanoi, and on to his first couple years in Paris. In works from this period we see depictions of the Vietnamese landscape of Le Pho’s youth, paintings steeped with nostalgia and the historical magnificence of the country. Following this style came what is commonly known as Le Pho’s Romanet period, named after the French gallery owner who became Le Pho’s major promoter. This period would last until the 1960s. In 1963, Le Pho’s work was noticed by the American gallerist Wally Findlay, owner of Findlay galleries, who ordered many of his canvases and sold them to the American market, marking the beginning of Le Pho’s final artistic period, his Findlay Period. This is perhaps his most recognizable period, where he produced more works in oil on canvas and featured his distinctly depicted Vietnamese women surrounded by lush landscapes. Many people consider the strong shifts in medium, subject, and style between these three periods to be a testament to Le Pho’s versatility as an artist. Though he travelled for his shows, he continued to call Paris his home from 1937 until the time of his death in 2001. He was one of four EBAI graduates who made a career in Paris, including Mai Trung Thứ, Vũ Cao Đàm and female painter Lê Thị Lựu. He painted scenery of Vietnam, still life with flowers, family settings and portraits. Vietnamese women, most often portrayed as elongated figures evoking the influence of surrealism, are a recurrent theme in his work.\n\nThis is a part of the Wikipedia article used under the Creative Commons Attribution-Sharealike 3.0 Unported License (CC-BY-SA). The full text of the article is here →",
+            "pages": [
+                "Le Pho - 46 artworks - painting (11_16_2026 4：20：31 PM).html",
+                "Le Pho - 46 artworks - painting (11_16_2026 4：47：23 PM).html"
+            ],
+            "paintings": [
+                {
+                    "title": "Still life with artichokes",
+                    "year": 1956,
+                    "year_text": "1956",
+                    "source": "https://www.wikiart.org/en/le-pho/still-life-with-artichokes-1956",
+                    "image_stem": "t9_a904f7da010c0e2391bf97298f01c0bb",
+                    "extension": "jpg",
+                    "saved_page": "Le Pho - 46 artworks - painting (11_16_2026 4：20：31 PM).html",
+                    "genres": [
+                        "still life"
+                    ],
+                    "description": null,
+                    "detail_page": "Le Pho - 46 artworks - painting (11_16_2026 4：47：23 PM).html",
+                    "medium": null,
+                    "dimensions": null,
+                    "style": "Post-Impressionism",
+                    "original_title": null,
+                    "date_text": "1956"
+                },
+                {
+                    "title": "La Fleuriste",
+                    "year": 1967,
+                    "year_text": "1967",
+                    "source": "https://www.wikiart.org/en/le-pho/la-fleuriste-1967",
+                    "image_stem": "t9_75299a31bd8b83efb3c3f2f27d60f8e4",
+                    "extension": "jpg",
+                    "saved_page": "Le Pho - 46 artworks - painting (11_16_2026 4：20：31 PM).html",
+                    "genres": [
+                        "genre painting"
+                    ],
+                    "description": null,
+                    "detail_page": "Le Pho - 46 artworks - painting (11_16_2026 4：47：23 PM).html",
+                    "medium": null,
+                    "dimensions": null,
+                    "style": "Post-Impressionism",
+                    "original_title": null,
+                    "date_text": "1967"
+                },
+                {
+                    "title": "Fleurs",
+                    "year": 1971,
+                    "year_text": "1971",
+                    "source": "https://www.wikiart.org/en/le-pho/fleurs-1971",
+                    "image_stem": "t9_d8547219768f71d3a41954d91ec251f8",
+                    "extension": "jpg",
+                    "saved_page": "Le Pho - 46 artworks - painting (11_16_2026 4：20：31 PM).html",
+                    "genres": [
+                        "flower painting"
+                    ],
+                    "description": null,
+                    "detail_page": "Le Pho - 46 artworks - painting (11_16_2026 4：47：23 PM).html",
+                    "medium": null,
+                    "dimensions": null,
+                    "style": "Post-Impressionism",
+                    "original_title": null,
+                    "date_text": "1971"
+                },
+                {
+                    "title": "The Birthday Cake",
+                    "year": 1975,
+                    "year_text": "1975",
+                    "source": "https://www.wikiart.org/en/le-pho/the-birthday-cake-1975",
+                    "image_stem": "t9_7a3a6cd81452f475d1884f83c1c83f83",
+                    "extension": "jpg",
+                    "saved_page": "Le Pho - 46 artworks - painting (11_16_2026 4：20：31 PM).html",
+                    "genres": [
+                        "genre painting"
+                    ],
+                    "description": null,
+                    "detail_page": "Le Pho - 46 artworks - painting (11_16_2026 4：47：23 PM).html",
+                    "medium": null,
+                    "dimensions": null,
+                    "style": "Post-Impressionism",
+                    "original_title": null,
+                    "date_text": "1975"
+                },
+                {
+                    "title": "Afternoon in the Garden",
+                    "year": null,
+                    "year_text": "?",
+                    "source": "https://www.wikiart.org/en/le-pho/afternoon-in-the-garden",
+                    "image_stem": "t9_30aa0d02b185c684ff522da4e4f844a6",
+                    "extension": "jpg",
+                    "saved_page": "Le Pho - 46 artworks - painting (11_16_2026 4：20：31 PM).html",
+                    "genres": [
+                        "genre painting"
+                    ],
+                    "description": null,
+                    "detail_page": "Le Pho - 46 artworks - painting (11_16_2026 4：47：23 PM).html",
+                    "medium": null,
+                    "dimensions": null,
+                    "style": "Post-Impressionism",
+                    "original_title": null,
+                    "date_text": null
+                }
+            ],
+            "issues": []
+        },
+        {
+            "slug": "tran-van-can",
+            "requested_name": "Trần Văn Cẩn",
+            "name": "Tran Van Can",
+            "source": "https://www.wikiart.org/en/tran-van-can",
+            "birth_date": "1910",
+            "death_date": "July 31, 1994",
+            "nationality": "Vietnamese",
+            "biography": "Trần Văn Cẩn (Kiến An, now part of Hải Phòng city, 13 August 1910 – 1994) was a Vietnamese painter. Trần Văn Cẩn was a student at the École des Beaux-Arts d'Indochine during the tenure of the French sculptor Évariste Jonchère from 1938 to 1944 and challenged his teacher to compare his French style with local sculpture for vigour. Trần Văn Cẩn, Huu Ngoc and Vu Huyen co-wrote of one of the first books in English language on Vietnamese contemporary painters, (published in Hanoi in 1987), in which it states that Can was known for the fact he excelled in all the artistic media he took his hand to – lacquer, oil, wood block printing engraving, and was considered a pioneer in transforming lacquer from an artisan’s craft to an expressive medium for painting. He won first prize at the National Art Exhibitions 1960, 1967 and 1980. As with biographies for all the painters included in the book, there is an emphasis on Nationalist affiliation and support, such as participating in the two wars for National Independence, rather than their influences and inspirations as artists. Can et al. state that ‘Opposed to the colonialist conceptions held by the director of this college, he refused an official appointment to live on his art (at L’ecole des Beaux Arts de Indochine, which he graduated from in 1936). He worked in the Cultural Association for National Salvation before the 1945 August revolution…and contributed to the birth of a socialist and national art.’ However, both Taylor and Geringer Art Ltd. state that he did work at the L’ecole des Beaux Arts de Indochine, although specific dates are not given. When he was a student at L’ecole des Beaux Arts de Indochine “ he was heavily influenced by Joseph Inguimberty (1896-1971) one of the founders of the school.” And according to Taylor the last French colonial governor in Vietnam organized an exhibition, which has been largely overlooked in Vietnamese records of the colonial period art, despite the fact that works by Tran Can Van, Nguyen Gia Tri, To Ngoc Van, Bui Xuan Phai displayed alongside well-known European artists, such as Jean-Antoine Watteau, Eugene Delacrois, Edgar Degas and Paul Cézanne. She goes on to suggest that had it not been for the politically-driven effort to establish an Independent state, the foreign artistic influences on the art practices and communities in Vietnam may have been more readily admitted to. Edwards argues, that the desire to establish a unique and distinct national identity is a natural reaction for a country that had been colonized and occupied. However, another reason that Vietnamese artists were keen to deny French influence and emphasize their Nationalistic sympathies, is the influential paper by Truong Chinh, ‘Marxism and Vietnamese culture’ presented in a 1948 conference, which advocated that Social Realism should be the root of all creativity, and demanded “an active return to what is uniquely Vietnamese, or simply put, … asks for Vietnamization.” This view was upheld by Ho Chi Minh, who did not want artists to become an elite intelligensia; instead he directed them to relocate themselves among workers, peasants and soldiers in the battlefields, and serve ‘as agents for the government’s propaganda system, a situation that changed only after Doi Moi in the early 1990s.\n\nThis is a part of the Wikipedia article used under the Creative Commons Attribution-Sharealike 3.0 Unported License (CC-BY-SA). The full text of the article is here →",
+            "pages": [
+                "Tran Van Can - 16 artworks - painting (11_16_2026 4：26：01 PM).html",
+                "Tran Van Can - 16 artworks - painting (11_16_2026 4：37：58 PM).html"
+            ],
+            "paintings": [
+                {
+                    "title": "Female Militia in the Sea 1960",
+                    "year": null,
+                    "year_text": "?",
+                    "source": "https://www.wikiart.org/en/tran-van-can/female-militia-in-the-sea-1960",
+                    "image_stem": "t9_0e90b0c540a4a31f8137db38535fe276",
+                    "extension": "jpg",
+                    "saved_page": "Tran Van Can - 16 artworks - painting (11_16_2026 4：26：01 PM).html",
+                    "genres": [
+                        "portrait"
+                    ],
+                    "description": null,
+                    "detail_page": "Tran Van Can - 16 artworks - painting (11_16_2026 4：37：58 PM).html",
+                    "medium": null,
+                    "dimensions": null,
+                    "style": "Social Realism",
+                    "original_title": null,
+                    "date_text": null
+                },
+                {
+                    "title": "Hair Washing",
+                    "year": null,
+                    "year_text": "?",
+                    "source": "https://www.wikiart.org/en/tran-van-can/hair-washing",
+                    "image_stem": "t9_75f56913bf9db195a24faf01338de9c8",
+                    "extension": "jpg",
+                    "saved_page": "Tran Van Can - 16 artworks - painting (11_16_2026 4：26：01 PM).html",
+                    "genres": [
+                        "genre painting",
+                        "nude painting (nu)"
+                    ],
+                    "description": null,
+                    "detail_page": "Tran Van Can - 16 artworks - painting (11_16_2026 4：37：58 PM).html",
+                    "medium": null,
+                    "dimensions": null,
+                    "style": "Post-Impressionism",
+                    "original_title": null,
+                    "date_text": null
+                },
+                {
+                    "title": "Yellow Girl",
+                    "year": null,
+                    "year_text": "?",
+                    "source": "https://www.wikiart.org/en/tran-van-can/yellow-girl",
+                    "image_stem": "t9_2a428148e5280914f4905475dcb63f1c",
+                    "extension": "png",
+                    "saved_page": "Tran Van Can - 16 artworks - painting (11_16_2026 4：26：01 PM).html",
+                    "genres": [
+                        "portrait"
+                    ],
+                    "description": null,
+                    "detail_page": "Tran Van Can - 16 artworks - painting (11_16_2026 4：37：58 PM).html",
+                    "medium": null,
+                    "dimensions": null,
+                    "style": "Post-Impressionism",
+                    "original_title": null,
+                    "date_text": null
+                },
+                {
+                    "title": "BAO NINH BEACH",
+                    "year": null,
+                    "year_text": "?",
+                    "source": "https://www.wikiart.org/en/tran-van-can/bao-ninh-beach",
+                    "image_stem": "t9_bd1e2cbeb46797005bb9bcad997bd3cd",
+                    "extension": "jpg",
+                    "saved_page": "Tran Van Can - 16 artworks - painting (11_16_2026 4：26：01 PM).html",
+                    "genres": [
+                        "landscape"
+                    ],
+                    "description": null,
+                    "detail_page": "Tran Van Can - 16 artworks - painting (11_16_2026 4：37：58 PM).html",
+                    "medium": null,
+                    "dimensions": null,
+                    "style": "Post-Impressionism",
+                    "original_title": null,
+                    "date_text": null
+                },
+                {
+                    "title": "SONG DA HYDROELECTRIC",
+                    "year": null,
+                    "year_text": "?",
+                    "source": "https://www.wikiart.org/en/tran-van-can/song-da-hydroelectric",
+                    "image_stem": "t9_ef75b99d2b22114f2ec79696bf1484a3",
+                    "extension": "jpg",
+                    "saved_page": "Tran Van Can - 16 artworks - painting (11_16_2026 4：26：01 PM).html",
+                    "genres": [
+                        "genre painting"
+                    ],
+                    "description": null,
+                    "detail_page": "Tran Van Can - 16 artworks - painting (11_16_2026 4：37：58 PM).html",
+                    "medium": null,
+                    "dimensions": null,
+                    "style": "Social Realism",
+                    "original_title": null,
+                    "date_text": null
+                }
+            ],
+            "issues": []
+        }
+    ]
+}

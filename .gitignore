@@ -3,3 +3,7 @@ tmp/
 images/art/works/square-medium/added-*
 .env
 .env.*
+
+# Local development tracking
+scripts/scraping/progress.md
+scripts/scraping/missing.md
