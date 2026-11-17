@@ -9,7 +9,7 @@ A PHP and MySQL website for browsing and managing paintings, artists, galleries,
 - `gallery-add.php`: add a gallery.
 - `gallery-delete.php`: confirm deletion and block it while paintings reference the gallery.
 - `genres.php`, `genre-add.php`, `genre-delete.php`: genre catalog with names, descriptions, painting counts, add and protected delete pages.
-- `eras.php`: view and search eras by name or year range, with links to details, update and delete.
+- `eras.php`: view eras alphabetically by name, with links to details, update and delete.
 - `era-detail.php`: view one era's complete name and year information.
 - `era-add.php`: add an era after validating its name and years and checking for a duplicate name.
 - `era-update.php`: update an era's years while keeping its identifying name unchanged.

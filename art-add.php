@@ -20,7 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = 'Use no more than 50 characters for the first name and 50 for the last name.';
         }
     }
-    if ($values['year'] !== '' && !preg_match('/\A[1-9][0-9]{0,3}\z/', $values['year'])) $errors[] = 'Year must be between 1 and 9999, or left blank.';
+    if (!art_valid_optional_year($_POST['year'] ?? '')) {
+        $errors['year'] = 'Painting year must be a whole number from 1 to 9999, or left blank.';
+    }
 
     $file = $_FILES['image'] ?? null;
     if (!is_array($file) || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
@@ -84,7 +86,10 @@ art_header('Add artwork');
     <input type="hidden" name="csrf" value="<?= art_h(art_token()) ?>">
     <p><label>Title: <input name="title" value="<?= art_h($values['title']) ?>" maxlength="255" required></label></p>
     <p><label>Artist name: <input name="artist" value="<?= art_h($values['artist']) ?>" maxlength="100" placeholder="Example: Vincent van Gogh" required></label></p>
-    <p><label>Year (optional): <input name="year" type="number" min="1" max="9999" value="<?= art_h($values['year']) ?>"></label></p>
+    <p><label>Year (optional):
+        <input name="year" inputmode="numeric" pattern="[1-9][0-9]{0,3}" placeholder="e.g. 1889" aria-describedby="year-help"
+            <?= isset($errors['year']) ? 'aria-invalid="true"' : '' ?> value="<?= art_h($values['year']) ?>">
+    </label><br><small class="help" id="year-help">Enter a whole year from 1 to 9999.</small></p>
     <p><label>Artwork image: <input name="image" type="file" accept="image/jpeg,image/png,image/gif,image/webp" required></label></p>
     <p class="help">JPEG, PNG, GIF, or WebP; maximum 5 MB.</p>
     <button type="submit">ADD</button> <a href="art-main.php">Cancel</a>

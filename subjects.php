@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/painting-subjects.php';
+require_once __DIR__ . '/includes/list-sort.php';
 art_require_login();
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'HEAD'], true)) {
     header('Allow: GET, HEAD');
@@ -7,13 +8,23 @@ if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'HEAD'], true)) {
 }
 $db = art_db();
 if (!art_subjects_have_ids($db)) art_error(503, 'Subjects setup required', 'Follow the Subjects setup instructions in README.md.');
+$sortOptions = [
+    'name' => ['Subject name', 's.SubjectName'],
+    'id' => ['Subject ID', 's.SubjectID'],
+    'paintings' => ['Painting count', 'PaintingCount', 's.SubjectName'],
+];
+[$orderBy, $sortKey, $direction] = art_list_sort($sortOptions, 's.SubjectID');
 $subjects = $db->query('SELECT s.SubjectID, s.SubjectName, COUNT(DISTINCT p.PaintingID) AS PaintingCount
     FROM Subjects s LEFT JOIN PaintingSubjects ps ON ps.SubjectID = s.SubjectID
     LEFT JOIN Paintings p ON p.PaintingID = ps.PaintingID
-    GROUP BY s.SubjectID, s.SubjectName ORDER BY s.SubjectName, s.SubjectID');
+    GROUP BY s.SubjectID, s.SubjectName ORDER BY ' . $orderBy);
 art_header('Subjects');
 ?>
 <p><a href="subject-add.php">ADD subject</a></p>
+<form class="filters" method="get" action="subjects.php">
+    <?php art_sort_controls($sortOptions, $sortKey, $direction); ?>
+    <button type="submit">Sort</button>
+</form>
 <table>
     <thead><tr><th>ID</th><th>Name</th><th>Paintings</th><th>Delete</th></tr></thead>
     <tbody>

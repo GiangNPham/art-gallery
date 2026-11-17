@@ -23,6 +23,11 @@ function art_text($value): string
 {
     return html_entity_decode(strip_tags((string) $value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 }
+function art_http_link(string $link): bool
+{
+    return mb_strlen($link) <= 255 && filter_var($link, FILTER_VALIDATE_URL)
+        && in_array(strtolower(parse_url($link, PHP_URL_SCHEME) ?: ''), ['http', 'https'], true);
+}
 function art_session(): void
 {
     if (session_status() === PHP_SESSION_NONE) {
@@ -58,6 +63,10 @@ function art_token(): string
 function art_post(string $name): string
 {
     return isset($_POST[$name]) && is_string($_POST[$name]) ? trim($_POST[$name]) : '';
+}
+function art_valid_optional_year($value): bool
+{
+    return is_string($value) && ($value === '' || preg_match('/\A[1-9][0-9]{0,3}\z/', $value) === 1);
 }
 function art_csrf(): void
 {
@@ -98,7 +107,7 @@ function art_header(string $title, string $active = 'collection'): void
         . '</title><link rel="stylesheet" href="assets/gallery.css"></head><body>'
         . '<h1>' . art_h($title) . '</h1><nav>';
     if ($customer) {
-        echo '<div class="nav-links"><a href="art-main.php">Art Gallery</a> | <a href="artists.php">Artists</a> | <a href="galleries.php">Galleries</a> | <a href="painting-genres.php">Painting genres</a> | <a href="painting-subjects.php">Painting subjects</a> | <a href="eras.php">Eras</a> | <a href="genres.php">Genres</a> | <a href="subjects.php">Subjects</a></div>'
+        echo '<div class="nav-links"><a href="art-main.php">Art Gallery</a> | <a href="artists.php">Artists</a> | <a href="galleries.php">Galleries</a> | <a href="painting-genres.php">Painting genres</a> | <a href="painting-subjects.php">Painting subjects</a> | <a href="eras.php">Eras</a> | <a href="genres.php">Genres</a> | <a href="subjects.php">Subjects</a> | <a href="collection-summary.php">Collection summary</a></div>'
             . '<div class="nav-account"><form class="logout-form" action="art-add.php" method="get"><button type="submit">ADD artwork</button></form><span>'
             . art_h($customer['first_name'] . ' ' . $customer['last_name'])
             . ' (' . art_h($customer['userid']) . ')</span>'

@@ -1,18 +1,30 @@
 <?php
 require_once __DIR__ . '/includes/app.php';
+require_once __DIR__ . '/includes/list-sort.php';
 art_require_login();
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'HEAD'], true)) {
     header('Allow: GET, HEAD');
     art_error(405, 'Method not allowed', 'Open galleries from the navigation link.');
 }
+$sortOptions = [
+    'name' => ['Gallery name', 'g.GalleryName'],
+    'city' => ['City', 'g.GalleryCity', 'g.GalleryName'],
+    'country' => ['Country', 'g.GalleryCountry', 'g.GalleryName'],
+    'paintings' => ['Painting count', 'PaintingCount', 'g.GalleryName'],
+];
+[$orderBy, $sortKey, $direction] = art_list_sort($sortOptions, 'g.GalleryID');
 $galleries = art_db()->query('SELECT g.GalleryID, g.GalleryName, g.GalleryCity, g.GalleryCountry,
     COUNT(p.PaintingID) AS PaintingCount
     FROM Galleries g LEFT JOIN Paintings p ON p.GalleryID = g.GalleryID
     GROUP BY g.GalleryID, g.GalleryName, g.GalleryCity, g.GalleryCountry
-    ORDER BY g.GalleryName, g.GalleryID');
+    ORDER BY ' . $orderBy);
 art_header('Galleries');
 ?>
 <p><a href="gallery-add.php">ADD gallery</a></p>
+<form class="filters" method="get" action="galleries.php">
+    <?php art_sort_controls($sortOptions, $sortKey, $direction); ?>
+    <button type="submit">Sort</button>
+</form>
 <table>
     <thead><tr><th>Name</th><th>City</th><th>Country</th><th>Paintings</th><th>Delete</th></tr></thead>
     <tbody>

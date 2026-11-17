@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/app.php';
+require_once __DIR__ . '/includes/list-sort.php';
 art_require_login();
 $db = art_db();
 $artist = isset($_GET['id']) && $_GET['id'] !== '' ? art_id($_GET['id']) : null;
@@ -15,13 +16,19 @@ if ((isset($_GET['year']) && !is_string($_GET['year']))
     art_error(400, 'Invalid year', 'Enter a year between 1 and 9999.');
 }
 $year = $yearText === '' ? 0 : (int) $yearText;
+$sortOptions = [
+    'title' => ['Painting title', 'p.Title'],
+    'artist' => ['Artist last name', 'a.LastName', 'a.FirstName', 'p.Title'],
+    'year' => ['Year', 'p.YearOfWork', 'p.Title'],
+];
+[$orderBy, $sortKey, $direction] = art_list_sort($sortOptions, 'p.PaintingID');
 $artists = $db->query('SELECT ArtistID, FirstName, LastName FROM Artists ORDER BY LastName, FirstName')->fetch_all(MYSQLI_ASSOC);
 $sql = 'SELECT p.PaintingID, p.ImageFileName, p.Title, p.YearOfWork, a.FirstName, a.LastName
     FROM Paintings p LEFT JOIN Artists a ON p.ArtistID = a.ArtistID
     WHERE (? = 0 OR p.ArtistID = ?)
       AND (? = \'\' OR p.Title LIKE CONCAT(\'%\', ?, \'%\'))
       AND (? = 0 OR p.YearOfWork = ?)
-    ORDER BY p.Title';
+    ORDER BY ' . $orderBy;
 $artistId = $artist ?? 0;
 $stmt = $db->prepare($sql);
 $stmt->bind_param('iissii', $artistId, $artistId, $title, $title, $year, $year);
@@ -39,8 +46,10 @@ art_header('Art Gallery');
         </select></label>
     <label for="title">Title: <input id="title" name="title" value="<?= art_h($title) ?>" maxlength="255" placeholder="All titles"></label>
     <label for="year">Year: <input id="year" name="year" type="number" min="1" max="9999" value="<?= art_h($yearText) ?>" placeholder="All years"></label>
-    <button type="submit">Filter</button><a href="art-main.php">Clear</a>
+    <?php art_sort_controls($sortOptions, $sortKey, $direction); ?>
+    <button type="submit">Apply</button><a href="art-main.php">Clear</a>
 </form>
+<p>Paintings shown <strong><?= number_format($paintings->num_rows) ?></strong></p>
 <table>
     <thead>
         <tr>
@@ -48,6 +57,7 @@ art_header('Art Gallery');
             <th>Title</th>
             <th>Artist</th>
             <th>Year</th>
+            <th>Update</th>
             <th>Delete</th>
         </tr>
     </thead>
@@ -58,6 +68,7 @@ art_header('Art Gallery');
                 <td><a href="art-detail.php?id=<?= (int) $painting['PaintingID'] ?>"><?= art_h($painting['Title']) ?></a></td>
                 <td><?= art_h(art_artist($painting)) ?></td>
                 <td><?= (int) $painting['YearOfWork'] ?: '' ?></td>
+                <td><a href="art-update.php?id=<?= (int) $painting['PaintingID'] ?>">Update</a></td>
                 <td>
                     <form method="get" action="art-delete.php"><input type="hidden" name="id" value="<?= (int) $painting['PaintingID'] ?>"><button type="submit">Delete</button></form>
                 </td>
