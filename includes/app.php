@@ -1,5 +1,5 @@
 <?php
-// The gallery is self-contained so the artwork folder can be copied to htdocs.
+// The gallery is self-contained
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 function art_db(): mysqli
 {
@@ -55,7 +55,7 @@ function art_require_login(): void
         exit;
     }
 }
-// Task 10: roles. If there's an old session it is a client now
+// Task 10: roles. An old session is client
 function art_is_admin(): bool
 {
     $customer = art_customer();
@@ -127,7 +127,7 @@ function art_header(string $title, string $active = 'collection'): void
             . '<form class="logout-form" action="logout.php" method="post"><input type="hidden" name="csrf" value="' . art_h(art_token()) . '">'
             . '<button type="submit">Sign out</button></form></div>';
     } else {
-        echo '<a aria-current="page" href="art-login.php">Customer sign in</a>';
+        echo '<a href="art-login.php">Customer sign in</a> | <a href="register.php">Register</a>';
     }
     echo '</nav><main>';
     if (isset($_SESSION['flash'])) {
