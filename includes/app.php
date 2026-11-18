@@ -1,5 +1,5 @@
 <?php
-// The gallery is self-contained so the artwork folder can be copied to htdocs.
+// The gallery is self-contained
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 function art_db(): mysqli
 {
@@ -55,6 +55,19 @@ function art_require_login(): void
         exit;
     }
 }
+// Task 10: roles. An old session is client
+function art_is_admin(): bool
+{
+    $customer = art_customer();
+    return $customer !== null && ($customer['role'] ?? 'client') === 'admin';
+}
+function art_require_admin(): void
+{
+    art_require_login();
+    if (!art_is_admin()) {
+        art_error(403, 'Admin access only', 'Your account does not have permission to change the collection.');
+    }
+}
 function art_token(): string
 {
     art_session();
@@ -108,13 +121,13 @@ function art_header(string $title, string $active = 'collection'): void
         . '<h1>' . art_h($title) . '</h1><nav>';
     if ($customer) {
         echo '<div class="nav-links"><a href="art-main.php">Art Gallery</a> | <a href="artists.php">Artists</a> | <a href="galleries.php">Galleries</a> | <a href="painting-genres.php">Painting genres</a> | <a href="painting-subjects.php">Painting subjects</a> | <a href="eras.php">Eras</a> | <a href="genres.php">Genres</a> | <a href="subjects.php">Subjects</a> | <a href="collection-summary.php">Collection summary</a></div>'
-            . '<div class="nav-account"><form class="logout-form" action="art-add.php" method="get"><button type="submit">ADD artwork</button></form><span>'
+            . '<div class="nav-account">' . (art_is_admin() ? '<form class="logout-form" action="art-add.php" method="get"><button type="submit">ADD artwork</button></form>' : '') . '<span>'
             . art_h($customer['first_name'] . ' ' . $customer['last_name'])
             . ' (' . art_h($customer['userid']) . ')</span>'
             . '<form class="logout-form" action="logout.php" method="post"><input type="hidden" name="csrf" value="' . art_h(art_token()) . '">'
             . '<button type="submit">Sign out</button></form></div>';
     } else {
-        echo '<a aria-current="page" href="art-login.php">Customer sign in</a>';
+        echo '<a href="art-login.php">Customer sign in</a> | <a href="register.php">Register</a>';
     }
     echo '</nav><main>';
     if (isset($_SESSION['flash'])) {

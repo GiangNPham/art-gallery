@@ -91,8 +91,7 @@ art_header('Art Gallery');
             <th>Title</th>
             <th>Artist</th>
             <th>Year</th>
-            <th>Update</th>
-            <th>Delete</th>
+            <?php if (art_is_admin()): ?><th>Update</th><th>Delete</th><?php endif; ?>
         </tr>
     </thead>
     <tbody>
@@ -102,10 +101,11 @@ art_header('Art Gallery');
                 <td><a href="art-detail.php?id=<?= (int) $painting['PaintingID'] ?>"><?= art_h($painting['Title']) ?></a></td>
                 <td><?= art_h(art_artist($painting)) ?></td>
                 <td><?= (int) $painting['YearOfWork'] ?: '' ?></td>
-                <td><a href="art-update.php?id=<?= (int) $painting['PaintingID'] ?>">Update</a></td>
+                <?php if (art_is_admin()): ?><td><a href="art-update.php?id=<?= (int) $painting['PaintingID'] ?>">Update</a></td>
                 <td>
                     <form method="get" action="art-delete.php"><input type="hidden" name="id" value="<?= (int) $painting['PaintingID'] ?>"><button type="submit">Delete</button></form>
                 </td>
+                <?php endif; ?>
             </tr>
         <?php endforeach; ?>
     </tbody>

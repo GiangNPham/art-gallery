@@ -20,20 +20,20 @@ $subjects = $db->query('SELECT s.SubjectID, s.SubjectName, COUNT(DISTINCT p.Pain
     GROUP BY s.SubjectID, s.SubjectName ORDER BY ' . $orderBy);
 art_header('Subjects');
 ?>
-<p><a href="subject-add.php">ADD subject</a></p>
+<?php if (art_is_admin()): ?><p><a href="subject-add.php">ADD subject</a></p><?php endif; ?>
 <form class="filters" method="get" action="subjects.php">
     <?php art_sort_controls($sortOptions, $sortKey, $direction); ?>
     <button type="submit">Sort</button>
 </form>
 <table>
-    <thead><tr><th>ID</th><th>Name</th><th>Paintings</th><th>Delete</th></tr></thead>
+    <thead><tr><th>ID</th><th>Name</th><th>Paintings</th><?php if (art_is_admin()): ?><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
     <?php foreach ($subjects as $subject): ?>
         <tr>
             <td><?= (int) $subject['SubjectID'] ?></td>
             <td><a href="subject-detail.php?id=<?= (int) $subject['SubjectID'] ?>"><?= art_h($subject['SubjectName']) ?></a></td>
             <td><?= (int) $subject['PaintingCount'] ?></td>
-            <td><a href="subject-delete.php?id=<?= (int) $subject['SubjectID'] ?>">Delete</a></td>
+            <?php if (art_is_admin()): ?><td><a href="subject-delete.php?id=<?= (int) $subject['SubjectID'] ?>">Delete</a></td><?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

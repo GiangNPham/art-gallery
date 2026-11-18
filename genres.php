@@ -14,20 +14,20 @@ $genres = art_db()->query('SELECT g.GenreID, g.GenreName, g.Description,
     GROUP BY g.GenreID, g.GenreName, g.Description ORDER BY ' . $orderBy);
 art_header('Genres');
 ?>
-<p><a href="genre-add.php">ADD genre</a></p>
+<?php if (art_is_admin()): ?><p><a href="genre-add.php">ADD genre</a></p><?php endif; ?>
 <form class="filters" method="get" action="genres.php">
     <?php art_sort_controls($sortOptions, $sortKey, $direction); ?>
     <button type="submit">Sort</button>
 </form>
 <table>
-    <thead><tr><th>Name</th><th>Description</th><th>Paintings</th><th>Delete</th></tr></thead>
+    <thead><tr><th>Name</th><th>Description</th><th>Paintings</th><?php if (art_is_admin()): ?><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
     <?php foreach ($genres as $genre): ?>
         <tr data-genre-id="<?= (int) $genre['GenreID'] ?>">
             <td><a href="genre-detail.php?id=<?= (int) $genre['GenreID'] ?>"><?= art_h($genre['GenreName']) ?></a></td>
             <td><?= nl2br(art_h(art_text($genre['Description'] ?? ''))) ?></td>
             <td><?= (int) $genre['PaintingCount'] ?></td>
-            <td><a href="genre-delete.php?id=<?= (int) $genre['GenreID'] ?>">Delete</a></td>
+            <?php if (art_is_admin()): ?><td><a href="genre-delete.php?id=<?= (int) $genre['GenreID'] ?>">Delete</a></td><?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

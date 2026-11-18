@@ -25,10 +25,10 @@ foreach ($assignments as $assignment) {
 }
 art_header('Painting subjects');
 ?>
-<p><a href="painting-subject-add.php">ADD painting subject</a></p>
+<?php if (art_is_admin()): ?><p><a href="painting-subject-add.php">ADD painting subject</a></p><?php endif; ?>
 <h2>Painting links</h2>
 <table>
-    <thead><tr><th>Image</th><th>Title</th><th>Subject</th><th>Delete</th></tr></thead>
+    <thead><tr><th>Image</th><th>Title</th><th>Subject</th><?php if (art_is_admin()): ?><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
     <?php foreach ($paintings as $painting): ?>
     <?php foreach ($painting['subjects'] as $index => $assignment): ?>
@@ -42,7 +42,7 @@ art_header('Painting subjects');
             <?php else: ?>Missing painting #<?= (int) $painting['PaintingID'] ?><?php endif; ?></td>
             <?php endif; ?>
             <td><a href="subject-detail.php?id=<?= (int) $assignment['SubjectID'] ?>"><?= art_h($subjects[(int) $assignment['SubjectID']] ?? 'Unknown subject #' . (int) $assignment['SubjectID']) ?></a></td>
-            <td><a href="painting-subject-delete.php?id=<?= (int) $assignment['PaintingSubjectID'] ?>">Delete</a></td>
+            <?php if (art_is_admin()): ?><td><a href="painting-subject-delete.php?id=<?= (int) $assignment['PaintingSubjectID'] ?>">Delete</a></td><?php endif; ?>
         </tr>
     <?php endforeach; ?>
     <?php endforeach; ?>

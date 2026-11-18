@@ -10,16 +10,16 @@ if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'HEAD'], true)) {
 $eras = art_db()->query('SELECT EraName, EraYears FROM Eras ORDER BY EraName');
 art_header('Eras');
 ?>
-<p><a href="era-add.php">ADD era</a></p>
+<?php if (art_is_admin()): ?><p><a href="era-add.php">ADD era</a></p><?php endif; ?>
 <table>
-    <thead><tr><th>Name</th><th>Years</th><th>Update</th><th>Delete</th></tr></thead>
+    <thead><tr><th>Name</th><th>Years</th><?php if (art_is_admin()): ?><th>Update</th><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
     <?php foreach ($eras as $era): ?>
         <tr>
             <td><a href="era-detail.php?name=<?= rawurlencode($era['EraName']) ?>"><?= art_h($era['EraName']) ?></a></td>
             <td><?= art_h($era['EraYears']) ?></td>
-            <td><a href="era-update.php?name=<?= rawurlencode($era['EraName']) ?>">Update</a></td>
-            <td><a href="era-delete.php?name=<?= rawurlencode($era['EraName']) ?>">Delete</a></td>
+            <?php if (art_is_admin()): ?><td><a href="era-update.php?name=<?= rawurlencode($era['EraName']) ?>">Update</a></td><?php endif; ?>
+            <?php if (art_is_admin()): ?><td><a href="era-delete.php?name=<?= rawurlencode($era['EraName']) ?>">Delete</a></td><?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

@@ -5,3 +5,4 @@
     <p><label>Password: <input name="password" type="password" autocomplete="current-password" required></label></p>
     <button type="submit">Sign in</button>
 </form>
+<p>New here? <a href="register.php">Create an account</a></p>

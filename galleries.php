@@ -20,13 +20,13 @@ $galleries = art_db()->query('SELECT g.GalleryID, g.GalleryName, g.GalleryCity, 
     ORDER BY ' . $orderBy);
 art_header('Galleries');
 ?>
-<p><a href="gallery-add.php">ADD gallery</a></p>
+<?php if (art_is_admin()): ?><p><a href="gallery-add.php">ADD gallery</a></p><?php endif; ?>
 <form class="filters" method="get" action="galleries.php">
     <?php art_sort_controls($sortOptions, $sortKey, $direction); ?>
     <button type="submit">Sort</button>
 </form>
 <table>
-    <thead><tr><th>Name</th><th>City</th><th>Country</th><th>Paintings</th><th>Delete</th></tr></thead>
+    <thead><tr><th>Name</th><th>City</th><th>Country</th><th>Paintings</th><?php if (art_is_admin()): ?><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
     <?php foreach ($galleries as $gallery): ?>
         <tr data-gallery-id="<?= (int) $gallery['GalleryID'] ?>">
@@ -34,7 +34,7 @@ art_header('Galleries');
             <td><?= art_h($gallery['GalleryCity']) ?></td>
             <td><?= art_h($gallery['GalleryCountry']) ?></td>
             <td><a href="gallery-detail.php?id=<?= (int) $gallery['GalleryID'] ?>"><?= (int) $gallery['PaintingCount'] ?></a></td>
-            <td><a href="gallery-delete.php?id=<?= (int) $gallery['GalleryID'] ?>">Delete</a></td>
+            <?php if (art_is_admin()): ?><td><a href="gallery-delete.php?id=<?= (int) $gallery['GalleryID'] ?>">Delete</a></td><?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

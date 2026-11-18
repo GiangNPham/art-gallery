@@ -22,7 +22,7 @@ art_header('Era details');
     <dt>Name</dt><dd><?= art_h($era['EraName']) ?></dd>
     <dt>Years</dt><dd><?= art_h($era['EraYears']) ?></dd>
 </dl>
-<p><a href="era-update.php?name=<?= rawurlencode($era['EraName']) ?>">Update era</a> |
+<p><?php if (art_is_admin()): ?><a href="era-update.php?name=<?= rawurlencode($era['EraName']) ?>">Update era</a> |
 <a href="era-delete.php?name=<?= rawurlencode($era['EraName']) ?>">Delete era</a> |
-<a href="eras.php">Back to Eras</a></p>
+<?php endif; ?><a href="eras.php">Back to Eras</a></p>
 <?php art_footer(); ?>

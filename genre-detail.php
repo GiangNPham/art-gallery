@@ -36,5 +36,5 @@ art_header('Genre details');
 <?php endforeach; ?>
 </ul>
 <?php else: ?><p>No paintings are linked to this genre.</p><?php endif; ?>
-<p><a href="genre-delete.php?id=<?= $id ?>">Delete genre</a> | <a href="painting-genres.php">Back to Painting genres</a></p>
+<p><?php if (art_is_admin()): ?><a href="genre-delete.php?id=<?= $id ?>">Delete genre</a> | <?php endif; ?><a href="painting-genres.php">Back to Painting genres</a></p>
 <?php art_footer(); ?>

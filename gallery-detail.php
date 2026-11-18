@@ -36,5 +36,5 @@ art_header('Gallery details');
 <?php if ($paintings->num_rows): ?><ul>
     <?php foreach ($paintings as $painting): ?><li><a href="art-detail.php?id=<?= (int) $painting['PaintingID'] ?>"><?= art_h($painting['Title']) ?></a></li><?php endforeach; ?>
 </ul><?php else: ?><p>No paintings are linked to this gallery.</p><?php endif; ?>
-<p><a href="gallery-delete.php?id=<?= $id ?>">Delete gallery</a> | <a href="galleries.php">Back to Galleries</a></p>
+<p><?php if (art_is_admin()): ?><a href="gallery-delete.php?id=<?= $id ?>">Delete gallery</a> | <?php endif; ?><a href="galleries.php">Back to Galleries</a></p>
 <?php art_footer(); ?>

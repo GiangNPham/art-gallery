@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/app.php';
-art_require_login();
+art_require_admin();
 
 $name = isset($_GET['name']) && is_string($_GET['name']) ? trim($_GET['name']) : '';
 if ($name === '' || mb_strlen($name) > 255) art_error(400, 'Choose an era', 'Use the Delete link beside an era.');
