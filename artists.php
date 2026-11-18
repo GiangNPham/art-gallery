@@ -16,13 +16,13 @@ $artists = art_db()->query('SELECT a.ArtistID, a.FirstName, a.LastName, a.Nation
     ORDER BY ' . $orderBy);
 art_header('Artists');
 ?>
-<p><a href="artist-add.php">ADD artist</a></p>
+<?php if (art_is_admin()): ?><p><a href="artist-add.php">ADD artist</a></p><?php endif; ?>
 <form class="filters" method="get" action="artists.php">
     <?php art_sort_controls($sortOptions, $sortKey, $direction); ?>
     <button type="submit">Sort</button>
 </form>
 <table>
-    <thead><tr><th>Name</th><th>Nationality</th><th>Born</th><th>Died</th><th>Paintings</th><th>Update</th><th>Delete</th></tr></thead>
+    <thead><tr><th>Name</th><th>Nationality</th><th>Born</th><th>Died</th><th>Paintings</th><?php if (art_is_admin()): ?><th>Update</th><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
     <?php foreach ($artists as $artist): ?>
         <tr data-artist-id="<?= (int) $artist['ArtistID'] ?>">
@@ -31,8 +31,8 @@ art_header('Artists');
             <td><?= (int) $artist['YearOfBirth'] ?: '' ?></td>
             <td><?= (int) $artist['YearOfDeath'] ?: '' ?></td>
             <td><a href="art-main.php?id=<?= (int) $artist['ArtistID'] ?>"><?= (int) $artist['PaintingCount'] ?></a></td>
-            <td><a href="artist-update.php?id=<?= (int) $artist['ArtistID'] ?>">Update</a></td>
-            <td><a href="artist-delete.php?id=<?= (int) $artist['ArtistID'] ?>">Delete</a></td>
+            <?php if (art_is_admin()): ?><td><a href="artist-update.php?id=<?= (int) $artist['ArtistID'] ?>">Update</a></td><?php endif; ?>
+            <?php if (art_is_admin()): ?><td><a href="artist-delete.php?id=<?= (int) $artist['ArtistID'] ?>">Delete</a></td><?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

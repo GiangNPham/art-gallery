@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/painting-subjects.php';
-art_require_login();
+art_require_admin();
 $id = art_id($_GET['id'] ?? null);
 if (!$id) art_error(400, 'Choose a painting subject', 'Use the Delete link beside a painting subject.');
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'], true)) {

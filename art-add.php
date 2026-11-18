@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/app.php';
-art_require_login();
+art_require_admin();
 $db = art_db();
 $values = array_fill_keys(['title', 'artist', 'year'], '');
 $errors = [];

@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/app.php';
-art_require_login();
+art_require_admin();
 art_session();
 $id = art_id($_GET['id'] ?? null);
 if (!$id) art_error(400, 'Choose an artwork', 'Use the Delete button beside an artwork in the collection.');

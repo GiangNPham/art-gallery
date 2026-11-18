@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/app.php';
-art_require_login();
+art_require_admin();
 $id = art_id($_GET['id'] ?? null);
 if (!$id) art_error(400, 'Choose an artist', 'Use the Delete link beside an artist on the Artists page.');
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'], true)) {

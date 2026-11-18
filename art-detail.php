@@ -52,7 +52,7 @@ art_header($painting['Title']);
         </dl>
         <?php if ($description !== ''): ?><h2>Description</h2>
             <p><?= nl2br(art_h($description)) ?></p><?php endif; ?>
-        <p class="detail-actions"><a href="art-main.php">Back to Art Gallery</a> <a href="art-update.php?id=<?= $id ?>">Update artwork</a> <a href="art-delete.php?id=<?= $id ?>">Delete artwork</a></p>
+        <p class="detail-actions"><a href="art-main.php">Back to Art Gallery</a> <?php if (art_is_admin()): ?><a href="art-update.php?id=<?= $id ?>">Update artwork</a> <a href="art-delete.php?id=<?= $id ?>">Delete artwork</a><?php endif; ?></p>
     </div>
 </article>
 <?php art_footer(); ?>

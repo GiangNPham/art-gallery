@@ -49,16 +49,16 @@ art_header('Painting genres');
 </table>
 <?php else: ?><p>No paintings found.</p><?php endif; ?>
 <h2>Manage genres</h2>
-<p><a href="painting-genre-add.php">ADD genre</a></p>
+<?php if (art_is_admin()): ?><p><a href="painting-genre-add.php">ADD genre</a></p><?php endif; ?>
 <table>
-    <thead><tr><th>Name</th><th>Description</th><th>Paintings</th><th>Delete</th></tr></thead>
+    <thead><tr><th>Name</th><th>Description</th><th>Paintings</th><?php if (art_is_admin()): ?><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
     <?php foreach ($genres as $genre): ?>
         <tr data-genre-id="<?= (int) $genre['GenreID'] ?>">
             <td><a href="genre-detail.php?id=<?= (int) $genre['GenreID'] ?>"><?= art_h($genre['GenreName']) ?></a></td>
             <td><?= nl2br(art_h(art_text($genre['Description'] ?? ''))) ?></td>
             <td><?= (int) $genre['PaintingCount'] ?></td>
-            <td><a href="painting-genre-delete.php?id=<?= (int) $genre['GenreID'] ?>">Delete</a></td>
+            <?php if (art_is_admin()): ?><td><a href="painting-genre-delete.php?id=<?= (int) $genre['GenreID'] ?>">Delete</a></td><?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

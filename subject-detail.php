@@ -33,5 +33,5 @@ art_header('Subject details');
 <?php endforeach; ?>
 </ul>
 <?php else: ?><p>No paintings are linked to this subject.</p><?php endif; ?>
-<p><a href="subject-delete.php?id=<?= $id ?>">Delete subject</a> | <a href="subjects.php">Back to Subjects</a></p>
+<p><?php if (art_is_admin()): ?><a href="subject-delete.php?id=<?= $id ?>">Delete subject</a> | <?php endif; ?><a href="subjects.php">Back to Subjects</a></p>
 <?php art_footer(); ?>

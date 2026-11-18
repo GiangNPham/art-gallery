@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/painting-subjects.php';
-art_require_login();
+art_require_admin();
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'], true)) {
     header('Allow: GET, POST');
     art_error(405, 'Method not allowed', 'Use the add subject form.');

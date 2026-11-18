@@ -121,7 +121,7 @@ function art_header(string $title, string $active = 'collection'): void
         . '<h1>' . art_h($title) . '</h1><nav>';
     if ($customer) {
         echo '<div class="nav-links"><a href="art-main.php">Art Gallery</a> | <a href="artists.php">Artists</a> | <a href="galleries.php">Galleries</a> | <a href="painting-genres.php">Painting genres</a> | <a href="painting-subjects.php">Painting subjects</a> | <a href="eras.php">Eras</a> | <a href="genres.php">Genres</a> | <a href="subjects.php">Subjects</a> | <a href="collection-summary.php">Collection summary</a></div>'
-            . '<div class="nav-account"><form class="logout-form" action="art-add.php" method="get"><button type="submit">ADD artwork</button></form><span>'
+            . '<div class="nav-account">' . (art_is_admin() ? '<form class="logout-form" action="art-add.php" method="get"><button type="submit">ADD artwork</button></form>' : '') . '<span>'
             . art_h($customer['first_name'] . ' ' . $customer['last_name'])
             . ' (' . art_h($customer['userid']) . ')</span>'
             . '<form class="logout-form" action="logout.php" method="post"><input type="hidden" name="csrf" value="' . art_h(art_token()) . '">'

@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/app.php';
-art_require_login();
+art_require_admin();
 $id = art_id($_GET['id'] ?? null);
 if (!$id) art_error(400, 'Choose a genre', 'Use the Delete link beside a genre on the Genres page.');
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'], true)) {
