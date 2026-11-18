@@ -4,7 +4,7 @@ require_once __DIR__ . '/app.php';
 function art_check_credentials(string $userid, string $password): ?array
 {
     $db = art_db();
-    $stmt = $db->prepare('SELECT c.CustomerID, c.FirstName, c.LastName, l.UserName, l.Pass
+    $stmt = $db->prepare('SELECT c.CustomerID, c.FirstName, c.LastName, l.UserName, l.Pass, l.Role
         FROM CustomerLogon l INNER JOIN Customers c ON c.CustomerID = l.CustomerID
         WHERE l.UserName = ? AND l.State = 1 LIMIT 1');
     $stmt->bind_param('s', $userid);
@@ -16,6 +16,7 @@ function art_check_credentials(string $userid, string $password): ?array
         'userid' => (string) $row['UserName'],
         'first_name' => (string) $row['FirstName'],
         'last_name' => (string) $row['LastName'],
+        'role' => $row['Role'] === 'admin' ? 'admin' : 'client',
     ];
 }
 
