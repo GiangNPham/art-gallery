@@ -55,6 +55,19 @@ function art_require_login(): void
         exit;
     }
 }
+// Task 10: roles. If there's an old session it is a client now
+function art_is_admin(): bool
+{
+    $customer = art_customer();
+    return $customer !== null && ($customer['role'] ?? 'client') === 'admin';
+}
+function art_require_admin(): void
+{
+    art_require_login();
+    if (!art_is_admin()) {
+        art_error(403, 'Admin access only', 'Your account does not have permission to change the collection.');
+    }
+}
 function art_token(): string
 {
     art_session();
