@@ -11,6 +11,7 @@ $eras = art_db()->query('SELECT EraName, EraYears FROM Eras ORDER BY EraName');
 art_header('Eras');
 ?>
 <?php if (art_is_admin()): ?><p><a href="era-add.php">ADD era</a></p><?php endif; ?>
+<div class="table-scroll" role="region" aria-label="Collection table" tabindex="0">
 <table>
     <thead><tr><th>Name</th><th>Years</th><?php if (art_is_admin()): ?><th>Update</th><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
@@ -24,5 +25,6 @@ art_header('Eras');
     <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 <?php if (!$eras->num_rows): ?><p>No eras found.</p><?php endif; ?>
 <?php art_footer(); ?>

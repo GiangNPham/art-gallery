@@ -58,7 +58,9 @@ Additional seeded demonstration accounts are `user2/pass2`, `user3/pass3` and `u
 | Offline scraping | Extract saved HTML, preview results, export JSON/SQL and import without duplicate records |
 | Form handling | Login sessions, password-hash verification, CSRF tokens, prepared statements and escaped output |
 
-Painting uploads accept JPEG, PNG, GIF or WebP up to 5 MB. Uploaded images and database inserts are handled together; failed saves roll back and remove partially saved upload files.
+**Task 5.** The gallery uses the viewport meta tag and responsive CSS. On phones, the navigation wraps, the filters stack, and detail pages switch to one column. Scroll wide tables sideways within their own containers.
+
+**Task 6.** Sign in and choose **ADD artwork** to upload a JPEG, PNG, GIF or WebP up to 5 MB. PHP checks the file contents and saves the image under a generated filename in `images/art/works/square-medium/`. The gallery displays the saved image on the listing and detail page. Failed saves roll back and remove partially saved upload files. For the full 5 MB limit, set PHP's `upload_max_filesize` to at least `5M` and `post_max_size` higher, for example `8M`.
 
 ## Technology and organization
 

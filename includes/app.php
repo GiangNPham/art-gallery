@@ -118,9 +118,9 @@ function art_header(string $title, string $active = 'collection'): void
     echo '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         . '<meta name="viewport" content="width=device-width, initial-scale=1"><title>' . art_h($title)
         . '</title><link rel="stylesheet" href="assets/gallery.css"></head><body>'
-        . '<h1>' . art_h($title) . '</h1><nav>';
+        . '<h1>' . art_h($title) . '</h1><nav aria-label="Gallery navigation">';
     if ($customer) {
-        echo '<div class="nav-links"><a href="art-main.php">Art Gallery</a> | <a href="artists.php">Artists</a> | <a href="galleries.php">Galleries</a> | <a href="painting-genres.php">Painting genres</a> | <a href="painting-subjects.php">Painting subjects</a> | <a href="eras.php">Eras</a> | <a href="genres.php">Genres</a> | <a href="subjects.php">Subjects</a> | <a href="collection-summary.php">Collection summary</a></div>'
+        echo '<div class="nav-links"><a href="art-main.php">Art Gallery</a><a href="artists.php">Artists</a><a href="galleries.php">Galleries</a><a href="painting-genres.php">Painting genres</a><a href="painting-subjects.php">Painting subjects</a><a href="eras.php">Eras</a><a href="genres.php">Genres</a><a href="subjects.php">Subjects</a><a href="collection-summary.php">Collection summary</a></div>'
             . '<div class="nav-account">' . (art_is_admin() ? '<form class="logout-form" action="art-add.php" method="get"><button type="submit">ADD artwork</button></form>' : '') . '<span>'
             . art_h($customer['first_name'] . ' ' . $customer['last_name'])
             . ' (' . art_h($customer['userid']) . ')</span>'

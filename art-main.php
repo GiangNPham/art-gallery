@@ -84,6 +84,7 @@ art_header('Art Gallery');
     <button type="submit">Apply</button><a href="art-main.php">Clear</a>
 </form>
 <p>Paintings shown <strong><?= number_format($paintings->num_rows) ?></strong></p>
+<div class="table-scroll" role="region" aria-label="Collection table" tabindex="0">
 <table>
     <thead>
         <tr>
@@ -110,5 +111,6 @@ art_header('Art Gallery');
         <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 <?php if (!$paintings->num_rows): ?><p>No artworks found.</p><?php endif; ?>
 <?php art_footer(); ?>

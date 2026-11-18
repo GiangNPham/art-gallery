@@ -7,6 +7,9 @@ $errors = [];
 $upload = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!$_POST && !$_FILES && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0) {
+        art_error(413, 'The upload could not be received', 'Choose an image no larger than 5 MB and try again.');
+    }
     art_csrf();
     foreach ($values as $field => $_) $values[$field] = art_post($field);
     if ($values['title'] === '' || mb_strlen($values['title']) > 255) $errors[] = 'Enter a title of 1–255 characters.';
@@ -27,23 +30,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $file = $_FILES['image'] ?? null;
     if (!is_array($file) || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
         $errors[] = 'Choose an image to upload.';
-    } elseif (($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+    } elseif (($file['error'] ?? null) === UPLOAD_ERR_INI_SIZE) {
+        $errors[] = 'The image exceeds the server upload limit. Choose a smaller image.';
+    } elseif (($file['error'] ?? null) !== UPLOAD_ERR_OK) {
         $errors[] = 'The image upload did not finish. Please try again.';
-    } elseif (($file['size'] ?? 0) < 1 || $file['size'] > 5 * 1024 * 1024) {
+    } elseif (($file['size'] ?? 0) > 5 * 1024 * 1024) {
         $errors[] = 'The image must be no larger than 5 MB.';
-    } elseif (!is_uploaded_file($file['tmp_name'])) {
+    } elseif (($file['size'] ?? 0) < 1 || !is_uploaded_file($file['tmp_name'])) {
         $errors[] = 'The uploaded image is invalid.';
     } else {
         $types = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/gif' => 'gif', 'image/webp' => 'webp'];
         $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
         $size = @getimagesize($file['tmp_name']);
-        if (!$size || !isset($types[$mime])) $errors[] = 'Upload a JPEG, PNG, GIF, or WebP image.';
+        if (!$size || !isset($types[$mime]) || $size['mime'] !== $mime) $errors[] = 'Upload a JPEG, PNG, GIF, or WebP image.';
         else $upload = ['temporary' => $file['tmp_name'], 'extension' => $types[$mime]];
     }
 
     if (!$errors && $upload) {
         $imageStem = 'added-' . bin2hex(random_bytes(12));
         $imagePath = __DIR__ . '/images/art/works/square-medium/' . $imageStem . '.' . $upload['extension'];
+        $saveError = 'The artwork could not be saved. Please try again.';
         $db->begin_transaction();
         try {
             $stmt = $db->prepare("SELECT ArtistID FROM Artists
@@ -58,7 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $artistId = $db->insert_id;
             }
             if (!move_uploaded_file($upload['temporary'], $imagePath)) {
-                throw new RuntimeException('The image could not be saved. Give PHP write access to the image folder.');
+                $saveError = 'The image could not be saved. Check that PHP can write to the gallery image folder.';
+                throw new RuntimeException('Could not move uploaded gallery image.');
             }
             $year = $values['year'] === '' ? null : (int) $values['year'];
             $stmt = $db->prepare('INSERT INTO Paintings (Title, ArtistID, YearOfWork, ImageFileName) VALUES (?, ?, ?, ?)');
@@ -71,7 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (Throwable $error) {
             $db->rollback();
             if (is_file($imagePath)) unlink($imagePath);
-            $errors[] = $error instanceof RuntimeException ? $error->getMessage() : 'The artwork could not be saved.';
+            error_log((string) $error);
+            $errors[] = $saveError;
             http_response_code(500);
         }
     } elseif ($errors) http_response_code(422);
@@ -90,8 +98,8 @@ art_header('Add artwork');
         <input name="year" inputmode="numeric" pattern="[1-9][0-9]{0,3}" placeholder="e.g. 1889" aria-describedby="year-help"
             <?= isset($errors['year']) ? 'aria-invalid="true"' : '' ?> value="<?= art_h($values['year']) ?>">
     </label><br><small class="help" id="year-help">Enter a whole year from 1 to 9999.</small></p>
-    <p><label>Artwork image: <input name="image" type="file" accept="image/jpeg,image/png,image/gif,image/webp" required></label></p>
-    <p class="help">JPEG, PNG, GIF, or WebP; maximum 5 MB.</p>
+    <p><label>Artwork image: <input name="image" type="file" accept="image/jpeg,image/png,image/gif,image/webp" aria-describedby="image-help" required></label></p>
+    <p class="help" id="image-help">JPEG, PNG, GIF, or WebP up to 5 MB.</p>
     <button type="submit">ADD</button> <a href="art-main.php">Cancel</a>
 </form>
 <?php art_footer(); ?>

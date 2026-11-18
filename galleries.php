@@ -25,6 +25,7 @@ art_header('Galleries');
     <?php art_sort_controls($sortOptions, $sortKey, $direction); ?>
     <button type="submit">Sort</button>
 </form>
+<div class="table-scroll" role="region" aria-label="Collection table" tabindex="0">
 <table>
     <thead><tr><th>Name</th><th>City</th><th>Country</th><th>Paintings</th><?php if (art_is_admin()): ?><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
@@ -39,5 +40,6 @@ art_header('Galleries');
     <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 <?php if (!$galleries->num_rows): ?><p>No galleries found.</p><?php endif; ?>
 <?php art_footer(); ?>

@@ -21,6 +21,7 @@ art_header('Artists');
     <?php art_sort_controls($sortOptions, $sortKey, $direction); ?>
     <button type="submit">Sort</button>
 </form>
+<div class="table-scroll" role="region" aria-label="Collection table" tabindex="0">
 <table>
     <thead><tr><th>Name</th><th>Nationality</th><th>Born</th><th>Died</th><th>Paintings</th><?php if (art_is_admin()): ?><th>Update</th><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
@@ -37,5 +38,6 @@ art_header('Artists');
     <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 <?php if (!$artists->num_rows): ?><p>No artists found.</p><?php endif; ?>
 <?php art_footer(); ?>

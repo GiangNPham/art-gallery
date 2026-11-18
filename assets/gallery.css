@@ -24,3 +24,36 @@ button { cursor: pointer; }
 .art-detail dd { margin: 0; }
 .detail-actions { display: flex; gap: 16px; margin-top: 24px; }
 @media (max-width: 700px) { .art-detail { grid-template-columns: 1fr; } }
+
+/* Keep the page within the viewport while letting wide tables scroll locally. */
+main, .filters label, .art-detail > * { min-width: 0; }
+main, .nav-account { overflow-wrap: anywhere; }
+.nav-links { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.nav-links a { padding: 6px 0; }
+nav[aria-label] { align-items: flex-start; }
+.table-scroll { max-width: 100%; overflow-x: auto; margin-top: 16px; }
+.table-scroll table { margin-top: 0; }
+.table-scroll:focus-visible { outline: 2px solid #0645ad; outline-offset: 2px; }
+img { max-width: 100%; }
+textarea { font: inherit; max-width: 100%; box-sizing: border-box; }
+.detail-actions { flex-wrap: wrap; }
+.art-detail dl { grid-template-columns: max-content minmax(0, 1fr); }
+
+@media (max-width: 700px) {
+    body { margin: 16px; }
+    nav, .nav-account { gap: 8px 12px; }
+    .nav-account { margin-left: 0; width: 100%; }
+    .filters { align-items: stretch; }
+    .filters label { flex: 1 1 230px; flex-direction: column; align-items: stretch; }
+    .filters input[name="year"] { width: 100%; }
+    input, select, textarea, button { font-size: 16px; }
+    input:not([type="checkbox"]):not([type="radio"]), select, textarea { min-height: 40px; }
+    button, .nav-links a { min-height: 40px; }
+    .nav-links a { box-sizing: border-box; display: inline-flex; align-items: center; }
+}
+
+@media (max-width: 380px) {
+    body { margin: 12px; }
+    .art-detail dl { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .art-detail dd { margin-bottom: 8px; }
+}

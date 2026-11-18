@@ -22,6 +22,7 @@ art_header('Painting genres');
 ?>
 <h2>Paintings and their genres</h2>
 <?php if ($paintings->num_rows): ?>
+<div class="table-scroll" role="region" aria-label="Painting genre results" tabindex="0">
 <table>
     <thead><tr><th scope="col">Image</th><th scope="col">Title</th><th scope="col">Genres</th></tr></thead>
     <tbody>
@@ -47,9 +48,11 @@ art_header('Painting genres');
     <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 <?php else: ?><p>No paintings found.</p><?php endif; ?>
 <h2>Manage genres</h2>
 <?php if (art_is_admin()): ?><p><a href="painting-genre-add.php">ADD genre</a></p><?php endif; ?>
+<div class="table-scroll" role="region" aria-label="Painting genre results" tabindex="0">
 <table>
     <thead><tr><th>Name</th><th>Description</th><th>Paintings</th><?php if (art_is_admin()): ?><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
@@ -63,5 +66,6 @@ art_header('Painting genres');
     <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 <?php if (!$genres->num_rows): ?><p>No genres found.</p><?php endif; ?>
 <?php art_footer(); ?>

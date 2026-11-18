@@ -29,6 +29,7 @@ $lists = [
 ];
 art_header('Collection summary');
 ?>
+<div class="table-scroll" role="region" aria-label="Collection table" tabindex="0">
 <table>
     <thead><tr><th scope="col">Collection table</th><th scope="col">Total records</th></tr></thead>
     <tbody>
@@ -40,4 +41,5 @@ art_header('Collection summary');
     <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 <?php art_footer(); ?>

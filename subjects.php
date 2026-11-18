@@ -25,6 +25,7 @@ art_header('Subjects');
     <?php art_sort_controls($sortOptions, $sortKey, $direction); ?>
     <button type="submit">Sort</button>
 </form>
+<div class="table-scroll" role="region" aria-label="Collection table" tabindex="0">
 <table>
     <thead><tr><th>ID</th><th>Name</th><th>Paintings</th><?php if (art_is_admin()): ?><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
@@ -38,5 +39,6 @@ art_header('Subjects');
     <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 <?php if (!$subjects->num_rows): ?><p>No subjects found.</p><?php endif; ?>
 <?php art_footer(); ?>

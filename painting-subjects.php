@@ -27,6 +27,7 @@ art_header('Painting subjects');
 ?>
 <?php if (art_is_admin()): ?><p><a href="painting-subject-add.php">ADD painting subject</a></p><?php endif; ?>
 <h2>Painting links</h2>
+<div class="table-scroll" role="region" aria-label="Collection table" tabindex="0">
 <table>
     <thead><tr><th>Image</th><th>Title</th><th>Subject</th><?php if (art_is_admin()): ?><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
@@ -48,5 +49,6 @@ art_header('Painting subjects');
     <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 <?php if (!$paintings): ?><p>No painting subjects found.</p><?php endif; ?>
 <?php art_footer(); ?>
