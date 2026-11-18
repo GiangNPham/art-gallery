@@ -34,8 +34,42 @@ $stmt = $db->prepare($sql);
 $stmt->bind_param('iissii', $artistId, $artistId, $title, $title, $year, $year);
 $stmt->execute();
 $paintings = $stmt->get_result();
+
+//added for task8 to select paintings to put in the carousel
+$featured = $db->query('SELECT p.PaintingID, p.ImageFileName, p.Title, a.FirstName, a.LastName
+    FROM Paintings p LEFT JOIN Artists a ON p.ArtistID = a.ArtistID ORDER BY RAND() LIMIT 12')->fetch_all(MYSQLI_ASSOC);
+
+
 art_header('Art Gallery');
 ?>
+
+<?php if ($featured): ?>
+<link rel="stylesheet" href="assets/carousel.css">
+<section class="carousel" aria-roledescription="carousel" aria-label="Featured paintings">
+    <h2>Featured paintings</h2>
+    <div class="carousel-frame">
+        <button type="button" class="carousel-btn carousel-prev" aria-label="Previous paintings">&#10094;</button>
+        <div class="carousel-viewport">
+            <ul class="carousel-track">
+                <?php foreach ($featured as $item): ?>
+                    <li class="carousel-item">
+                        <a href="art-detail.php?id=<?= (int) $item['PaintingID'] ?>">
+                            <img src="<?= art_h(art_image($item['ImageFileName'])) ?>" alt="<?= art_h($item['Title']) ?>" loading="lazy">
+                            <span class="carousel-caption"><?= art_h($item['Title']) ?><small><?= art_h(art_artist($item)) ?></small></span>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <button type="button" class="carousel-btn carousel-next" aria-label="Next paintings">&#10095;</button>
+    </div>
+    <div class="carousel-controls"><button type="button" class="carousel-toggle" aria-pressed="false">Pause</button></div>
+</section>
+<script src="assets/carousel.js" defer></script>
+<?php endif; ?>
+
+
+
 <form class="filters" method="get" action="art-main.php">
     <label for="artist">Artist:
         <select id="artist" name="id">

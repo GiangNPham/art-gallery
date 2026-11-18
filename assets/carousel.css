@@ -1,0 +1,23 @@
+/* Task 8: rotating painting carousel */
+.carousel { --visible: 4; --gap: 12px; margin: 0 0 24px; }
+.carousel h2 { font-size: 20px; margin: 0 0 10px; }
+.carousel-frame { display: flex; align-items: center; gap: 8px; }
+.carousel-viewport { flex: 1; min-width: 0; overflow: hidden; }
+.carousel-track { display: flex; gap: var(--gap); list-style: none; margin: 0; padding: 0; transition: transform 0.5s ease; }
+.carousel-item { flex: 0 0 calc((100% - (var(--visible) - 1) * var(--gap)) / var(--visible)); position: relative; overflow: hidden; border: 1px solid #aaa; background: #eee; }
+.carousel-item a { display: block; color: inherit; text-decoration: none; }
+.carousel-item img { display: block; width: 100%; aspect-ratio: 1 / 1; height: auto; object-fit: cover; transition: transform 0.3s ease; }
+.carousel-item:hover img, .carousel-item a:focus-visible img { transform: scale(1.06); }
+.carousel-caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 6px 8px; font-size: 13px; color: #fff; background: rgba(0, 0, 0, 0.65); transform: translateY(100%); transition: transform 0.3s ease; }
+.carousel-caption small { display: block; opacity: 0.85; }
+.carousel-item:hover .carousel-caption, .carousel-item a:focus-visible .carousel-caption { transform: translateY(0); }
+.carousel-btn { flex: none; width: 38px; height: 38px; padding: 0; border-radius: 50%; border: 1px solid #888; background: #fff; }
+.carousel-btn:hover { background: #eee; }
+.carousel-controls { margin-top: 8px; text-align: center; }
+.carousel[data-static] .carousel-btn, .carousel[data-static] .carousel-controls { display: none; }
+@media (max-width: 900px) { .carousel { --visible: 3; } }
+@media (max-width: 600px) { .carousel { --visible: 2; } }
+@media (max-width: 380px) { .carousel { --visible: 1; } }
+@media (prefers-reduced-motion: reduce) {
+    .carousel-track, .carousel-item img, .carousel-caption { transition: none; }
+}
