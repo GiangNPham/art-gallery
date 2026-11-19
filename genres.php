@@ -20,7 +20,13 @@ art_header('Genres');
     <button type="submit">Sort</button>
 </form>
 <div class="table-scroll" role="region" aria-label="Collection table" tabindex="0">
-<table>
+<table class="genres-table">
+    <colgroup>
+        <col class="genre-name-column">
+        <col>
+        <col class="genre-count-column">
+        <?php if (art_is_admin()): ?><col class="genre-action-column"><?php endif; ?>
+    </colgroup>
     <thead><tr><th>Name</th><th>Description</th><th>Paintings</th><?php if (art_is_admin()): ?><th>Delete</th><?php endif; ?></tr></thead>
     <tbody>
     <?php foreach ($genres as $genre): ?>
