@@ -22,18 +22,37 @@ $sortOptions = [
     'year' => ['Year', 'p.YearOfWork', 'p.Title'],
 ];
 [$orderBy, $sortKey, $direction] = art_list_sort($sortOptions, 'p.PaintingID');
+$pageText = $_GET['page'] ?? '1';
+if (!is_string($pageText) || !preg_match('/\A[1-9][0-9]{0,8}\z/', $pageText)) {
+    art_error(400, 'Invalid page', 'Choose a valid page number.');
+}
+$page = (int) $pageText;
+$pageSize = 20;
 $artists = $db->query('SELECT ArtistID, FirstName, LastName FROM Artists ORDER BY LastName, FirstName')->fetch_all(MYSQLI_ASSOC);
-$sql = 'SELECT p.PaintingID, p.ImageFileName, p.Title, p.YearOfWork, a.FirstName, a.LastName
-    FROM Paintings p LEFT JOIN Artists a ON p.ArtistID = a.ArtistID
+$where = ' FROM Paintings p LEFT JOIN Artists a ON p.ArtistID = a.ArtistID
     WHERE (? = 0 OR p.ArtistID = ?)
       AND (? = \'\' OR p.Title LIKE CONCAT(\'%\', ?, \'%\'))
-      AND (? = 0 OR p.YearOfWork = ?)
-    ORDER BY ' . $orderBy;
+      AND (? = 0 OR p.YearOfWork = ?)';
 $artistId = $artist ?? 0;
+$countStmt = $db->prepare('SELECT COUNT(*) AS total' . $where);
+$countStmt->bind_param('iissii', $artistId, $artistId, $title, $title, $year, $year);
+$countStmt->execute();
+$total = (int) $countStmt->get_result()->fetch_assoc()['total'];
+$pageCount = max(1, (int) ceil($total / $pageSize));
+if ($page > $pageCount) $page = $pageCount;
+$offset = ($page - 1) * $pageSize;
+$sql = 'SELECT p.PaintingID, p.ImageFileName, p.Title, p.YearOfWork, a.FirstName, a.LastName
+    ' . $where . ' ORDER BY ' . $orderBy . ' LIMIT ? OFFSET ?';
 $stmt = $db->prepare($sql);
-$stmt->bind_param('iissii', $artistId, $artistId, $title, $title, $year, $year);
+$stmt->bind_param('iissiiii', $artistId, $artistId, $title, $title, $year, $year, $pageSize, $offset);
 $stmt->execute();
 $paintings = $stmt->get_result();
+$pageUrl = static function (int $number) use ($artist, $title, $yearText, $sortKey, $direction): string {
+    return 'art-main.php?' . http_build_query([
+        'id' => $artist ?? '', 'title' => $title, 'year' => $yearText,
+        'sort' => $sortKey, 'direction' => $direction, 'page' => $number,
+    ]);
+};
 
 //added for task8 to select paintings to put in the carousel
 $featured = $db->query('SELECT p.PaintingID, p.ImageFileName, p.Title, a.FirstName, a.LastName
@@ -78,12 +97,17 @@ art_header('Art Gallery');
                 <option value="<?= (int) $row['ArtistID'] ?>" <?= $artist === (int) $row['ArtistID'] ? 'selected' : '' ?>><?= art_h(art_artist($row)) ?></option>
             <?php endforeach; ?>
         </select></label>
-    <label for="title">Title: <input id="title" name="title" value="<?= art_h($title) ?>" maxlength="255" placeholder="All titles"></label>
+    <div class="title-filter">
+        <label for="title">Title:
+            <input id="title" name="title" value="<?= art_h($title) ?>" maxlength="255" placeholder="Start typing a title" autocomplete="off" aria-autocomplete="list" aria-controls="title-suggestions" aria-expanded="false">
+        </label>
+        <ul id="title-suggestions" class="suggestions" role="listbox" aria-label="Painting title suggestions" hidden></ul>
+    </div>
     <label for="year">Year: <input id="year" name="year" type="number" min="1" max="9999" value="<?= art_h($yearText) ?>" placeholder="All years"></label>
     <?php art_sort_controls($sortOptions, $sortKey, $direction); ?>
     <button type="submit">Apply</button><a href="art-main.php">Clear</a>
 </form>
-<p>Paintings shown <strong><?= number_format($paintings->num_rows) ?></strong></p>
+<p>Showing <strong><?= $total ? number_format($offset + 1) . '–' . number_format($offset + $paintings->num_rows) : '0' ?></strong> of <strong><?= number_format($total) ?></strong> paintings</p>
 <div class="table-scroll" role="region" aria-label="Collection table" tabindex="0">
 <table>
     <thead>
@@ -113,4 +137,12 @@ art_header('Art Gallery');
 </table>
 </div>
 <?php if (!$paintings->num_rows): ?><p>No artworks found.</p><?php endif; ?>
+<?php if ($pageCount > 1): ?>
+<nav class="pagination" aria-label="Painting pages">
+    <?php if ($page > 1): ?><a href="<?= art_h($pageUrl($page - 1)) ?>">Previous</a><?php endif; ?>
+    <span>Page <?= $page ?> of <?= $pageCount ?></span>
+    <?php if ($page < $pageCount): ?><a href="<?= art_h($pageUrl($page + 1)) ?>">Next</a><?php endif; ?>
+</nav>
+<?php endif; ?>
+<script src="assets/title-suggestions.js" defer></script>
 <?php art_footer(); ?>

@@ -62,6 +62,10 @@ Additional seeded demonstration accounts are `user2/pass2`, `user3/pass3` and `u
 
 **Task 6.** Sign in and choose **ADD artwork** to upload a JPEG, PNG, GIF or WebP up to 5 MB. PHP checks the file contents and saves the image under a generated filename in `images/art/works/square-medium/`. The gallery displays the saved image on the listing and detail page. Failed saves roll back and remove partially saved upload files. For the full 5 MB limit, set PHP's `upload_max_filesize` to at least `5M` and `post_max_size` higher, for example `8M`.
 
+**Task 3.** The painting list on `art-main.php` shows 20 records per page. Previous and Next preserve the selected artist, title, year and sort order. The featured painting carousel above it also has previous and next controls.
+
+**Task 4.** Type the beginning of a painting title in the gallery's Title filter. JavaScript fetches up to eight matching titles from `title-suggestions.php` and shows a suggestion list. Select one with the mouse or arrow keys and Enter to apply the filter. The endpoint requires a signed-in session and uses a prepared query; typing `%` or `_` searches for those literal characters.
+
 ## Technology and organization
 
 PHP 8.1+, MySQL/MariaDB, HTML and CSS. The scraper uses PHP DOMDocument and DOMXPath. Required PHP extensions: mysqli, mbstring, DOM and libxml. XAMPP provides a convenient local environment.
