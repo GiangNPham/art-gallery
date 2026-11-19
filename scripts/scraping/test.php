@@ -7,7 +7,7 @@ function check(bool $condition, string $message): void {
 }
 $root=dirname(__DIR__,2);
 $data=json_decode(file_get_contents(__DIR__.'/output/results.json'),true,512,JSON_THROW_ON_ERROR);
-check(count($data['artists'])===3, 'three requested artist slots');
+check(count($data['artists'])>0 && $data['ready_for_import'], 'saved artists detected and ready for import');
 foreach ($data['artists'] as $a) {
     check(count($a['paintings'])===5, $a['requested_name'].' has five paintings');
     foreach ($a['paintings'] as $p) {
@@ -15,13 +15,12 @@ foreach ($data['artists'] as $a) {
         check($p['title']!=='' && is_file($path) && getimagesize($path)!==false, 'local image and title: '.$p['title']);
     }
 }
-check(str_contains(json_encode($data,JSON_UNESCAPED_UNICODE),'Trần Văn Cẩn'), 'Vietnamese UTF-8 labels preserved');
 $temp=sys_get_temp_dir().'/task9-test-'.bin2hex(random_bytes(6));
 mkdir($temp); mkdir($temp.'/input'); mkdir($temp.'/images');
 try {
     $missing=t9_run($temp.'/input',$temp.'/output',$temp.'/images');
     check(!$missing['ready_for_import'] && !preg_match('/^INSERT /m',file_get_contents($temp.'/output/import.sql')), 'missing files block SQL and replace previous output');
-    check(str_contains(implode(' ', $missing['artists'][0]['issues']),'Missing saved HTML'), 'missing page error identifies source');
+    check(!$missing['artists'] && str_contains(implode(' ', $missing['issues']),'saved_pages'), 'empty input identifies missing saved pages');
     // Synthetic HTML tests parser fields, not purported WikiArt results.
     $image=base64_encode(file_get_contents($root.'/images/art/works/square-medium/'.$data['artists'][0]['paintings'][0]['image_stem'].'.'.$data['artists'][0]['paintings'][0]['extension']));
     $html='<meta property="og:url" content="https://www.wikiart.org/en/le-pho"><h1 itemprop="name">Lê Phổ</h1><time itemprop="birthDate" datetime="1900-01-02">date</time><time itemprop="deathDate" datetime="2000-03-04">date</time><span itemprop="nationality">Việt Nam</span><div itemprop="description">Biography &amp; text</div><ul>';
@@ -42,6 +41,36 @@ try {
     $painting=$enriched['paintings'][0];
     check($painting['genres']===['portrait'] && $painting['medium']==='oil, canvas' && $painting['dimensions']==='60 x 45 cm' && $painting['description']==='Painting description', 'detailed capture merges genres, medium, dimensions and description by source');
     check($enriched['biography']==='Biography & text', 'painting description does not overwrite artist biography');
+    $single='<link rel="canonical" href="https://www.wikiart.org/en/le-pho/test-1"><h1 itemprop="name">Painting title, not artist</h1><meta name="description" content="Generic search summary"><p itemprop="description">Specific painting &amp; its story.</p><p itemprop="description">Second paragraph: Việt Nam.</p>';
+    file_put_contents($temp.'/input/00-painting.html',$single);
+    file_put_contents($temp.'/input/unselected.html','<meta property="og:url" content="https://www.wikiart.org/en/le-pho/test-6"><p itemprop="description">Not a selected painting.</p>');
+    $withPaintingPage=t9_parse('le-pho','Lê Phổ',$temp.'/input',$temp.'/images');
+    $painting=$withPaintingPage['paintings'][0];
+    check($painting['description']==="Specific painting & its story.\n\nSecond paragraph: Việt Nam.", 'individual painting page matches by source URL and preserves paragraph text');
+    check($painting['description_page']==='00-painting.html' && $painting['medium']==='oil, canvas', 'painting description supplements detailed-list metadata regardless of filename order');
+    check($withPaintingPage['name']==='Lê Phổ' && $withPaintingPage['biography']==='Biography & text', 'painting title and description do not overwrite artist identity or biography');
+    check(count($withPaintingPage['paintings'])===5 && $withPaintingPage['paintings'][1]['description']===null, 'unmatched detail pages do not add paintings or change other descriptions');
+    file_put_contents($temp.'/input/profile.html', str_replace('<h1 itemprop="name">Lê Phổ</h1>', '<meta itemprop="name" content="Lê Phổ">', $html.'</ul>'));
+    $metadataName=t9_parse('le-pho','Lê Phổ',$temp.'/input',$temp.'/images');
+    check($metadataName['name']==='Lê Phổ', 'artist name parsed from metadata without a heading');
+    $newArtist=str_replace(['le-pho','Lê Phổ'], ['new-test-artist','New Test Artist'], $html.'</ul>');
+    $newArtist=str_replace('property="og:url" content=', 'rel="canonical" href=', $newArtist);
+    $newArtist=str_replace('<meta rel="canonical"', '<link rel="canonical"', $newArtist);
+    file_put_contents($temp.'/input/unrelated-filename.html', $newArtist);
+    file_put_contents($temp.'/input/artwork.html', '<meta property="og:url" content="https://www.wikiart.org/en/le-pho/test-1"><h1>Wrong artist name</h1>');
+    file_put_contents($temp.'/input/unsupported.html', '<meta property="og:url" content="https://example.com/en/someone"><h1>Unsupported artist</h1>');
+    file_put_contents($temp.'/input/orphan.html', '<meta property="og:url" content="https://www.wikiart.org/en/orphan-artist/painting"><p itemprop="description">Needs an artist capture.</p>');
+    $discovered=t9_run($temp.'/input',$temp.'/output',$temp.'/images');
+    $slugs=array_column($discovered['artists'],'slug');
+    check($discovered['ready_for_import'] && count($slugs)===2, 'profile and all-works captures merge into one entry per artist');
+    check(in_array('new-test-artist',$slugs,true), 'new artist discovered from canonical URL without a fixed list or matching filename');
+    check($discovered['artists'][0]['name']==='Lê Phổ', 'individual artwork page does not overwrite artist name');
+    check(count($discovered['issues'])===2 && str_contains(implode(' ', $discovered['issues']),'unsupported.html'), 'unrecognized sources skipped with named diagnostics');
+    check(str_contains(implode(' ', $discovered['issues']),'orphan-artist'), 'painting detail without artist captures reports the missing profile');
+    file_put_contents($temp.'/input/incomplete.html', '<meta property="og:url" content="https://www.wikiart.org/en/incomplete-artist"><h1>Incomplete Artist</h1>');
+    $incompleteArtist=t9_run($temp.'/input',$temp.'/output',$temp.'/images');
+    check(!$incompleteArtist['ready_for_import'] && !preg_match('/^INSERT /m',file_get_contents($temp.'/output/import.sql')), 'newly discovered artist without five paintings blocks import');
+    foreach (['unrelated-filename.html','artwork.html','unsupported.html','incomplete.html','orphan.html','00-painting.html','unselected.html'] as $file) unlink($temp.'/input/'.$file);
     unlink($temp.'/input/details.html');
     file_put_contents($temp.'/input/profile.html',preg_replace('~data:image/jpeg;base64,[^"]+~','https://example.com/absent.jpg',$html.'</ul>'));
     $invalid=t9_parse('le-pho','Lê Phổ',$temp.'/input',$temp.'/images');
@@ -65,7 +94,12 @@ if (in_array('--database',$argv,true)) {
     try {
     $db->select_db($testDatabase);
     foreach ($definitions as $definition) $db->query($definition);
-    $db->query("INSERT INTO Artists (FirstName,LastName,Nationality) VALUES ('Edouard','Manet','France')");
+    $expectedArtists=count($data['artists']);
+    $expectedPaintings=array_sum(array_map(fn($a)=>count($a['paintings']),$data['artists']));
+    $firstArtist=$data['artists'][0];
+    $parts=explode(' ',$firstArtist['name']); $last=array_pop($parts); $first=implode(' ',$parts);
+    $seed=$db->prepare("INSERT INTO Artists (FirstName,LastName,Nationality,ArtistLink) VALUES (?,?,'Existing nationality',?)");
+    $seed->bind_param('sss',$first,$last,$firstArtist['source']); $seed->execute();
     // Synthetic metadata tests fill-empty behavior; never used for gallery imports.
     $importData=$data;
     $importData['artists'][0]['paintings'][0]['description']='Synthetic painting description';
@@ -76,7 +110,11 @@ if (in_array('--database',$argv,true)) {
         $expectedLinks+=count(array_unique($painting['genres'] ?? []));
     }
     $importData['artists'][0]['nationality']='Synthetic replacement';
-    $importData['artists'][1]['biography']='Synthetic test biography';
+    $importData['artists'][0]['biography']='Synthetic test biography';
+    $artistQuery=$db->prepare('SELECT Nationality,Details FROM Artists WHERE ArtistLink=?');
+    $artistQuery->bind_param('s',$firstArtist['source']);
+    $paintingQuery=$db->prepare('SELECT Medium,Description FROM Paintings WHERE WikiLink=?');
+    $paintingQuery->bind_param('s',$firstArtist['paintings'][0]['source']);
     $backupDirectory=sys_get_temp_dir().'/task9-import-test-'.bin2hex(random_bytes(6));
     for ($i=0;$i<2;$i++) {
         $import=t9_import($db,$importData,$backupDirectory);
@@ -86,13 +124,15 @@ if (in_array('--database',$argv,true)) {
         check((int)$db->query('SELECT COUNT(*) FROM Genres')->fetch_row()[0]===count($expectedGenres), 'genre records reused across imports');
         check((int)$db->query('SELECT COUNT(*) FROM PaintingGenres')->fetch_row()[0]===$expectedLinks, 'painting genre relationships do not duplicate');
         check((int)$db->query('SELECT COUNT(*) FROM PaintingGenres pg LEFT JOIN Paintings p ON p.PaintingID=pg.PaintingID LEFT JOIN Genres g ON g.GenreID=pg.GenreID WHERE p.PaintingID IS NULL OR g.GenreID IS NULL')->fetch_row()[0]===0, 'genre relationships reference real paintings and genres');
-        check($db->query("SELECT Medium FROM Paintings WHERE Title='Pierrot dancing'")->fetch_row()[0]==='Synthetic medium', 'painting medium imported');
-        check(str_contains($db->query("SELECT Description FROM Paintings WHERE Title='Pierrot dancing'")->fetch_row()[0],'Synthetic painting description'), 'painting description imported');
-        check($import['paintings_inserted']===($i===0 ? 15 : 0), 'automatic import reports newly inserted paintings');
-        check($db->query("SELECT Nationality FROM Artists WHERE LastName='Manet'")->fetch_row()[0]==='France', 'existing artist metadata preserved');
-        check($db->query("SELECT Details FROM Artists WHERE LastName='Pho'")->fetch_row()[0]==='Synthetic test biography', 'missing artist biography filled');
-        check((int)$db->query('SELECT COUNT(*) FROM Artists')->fetch_row()[0]===3, 'SQL import '.($i+1).' reuses Manet and has three artists');
-        check((int)$db->query('SELECT COUNT(*) FROM Paintings')->fetch_row()[0]===15, 'SQL import '.($i+1).' has fifteen paintings');
+        $paintingQuery->execute(); $storedPainting=$paintingQuery->get_result()->fetch_assoc();
+        $artistQuery->execute(); $storedArtist=$artistQuery->get_result()->fetch_assoc();
+        check($storedPainting['Medium']==='Synthetic medium', 'painting medium imported');
+        check(str_contains($storedPainting['Description'],'Synthetic painting description'), 'painting description imported');
+        check($import['paintings_inserted']===($i===0 ? $expectedPaintings : 0), 'automatic import reports newly inserted paintings');
+        check($storedArtist['Nationality']==='Existing nationality', 'existing artist metadata preserved');
+        check($storedArtist['Details']==='Synthetic test biography', 'missing artist biography filled');
+        check((int)$db->query('SELECT COUNT(*) FROM Artists')->fetch_row()[0]===$expectedArtists, 'SQL import '.($i+1).' reuses the existing artist and keeps the detected artist count');
+        check((int)$db->query('SELECT COUNT(*) FROM Paintings')->fetch_row()[0]===$expectedPaintings, 'SQL import '.($i+1).' keeps the detected painting count');
         check((int)$db->query('SELECT COUNT(*) FROM Paintings p LEFT JOIN Artists a ON p.ArtistID=a.ArtistID WHERE a.ArtistID IS NULL')->fetch_row()[0]===0, 'SQL relationships valid');
     }
     // Force a failure after the first artist has been inserted: verify transaction rollback.
@@ -105,7 +145,7 @@ if (in_array('--database',$argv,true)) {
     $db->query("SET SESSION sql_mode='STRICT_ALL_TABLES'");
     $failed=false;
     try { t9_import($db,$broken,$backupDirectory); } catch (RuntimeException $e) { $failed=true; }
-    check($failed && (int)$db->query('SELECT COUNT(*) FROM Artists')->fetch_row()[0]===3, 'failed import rolls back artist insertion');
+    check($failed && (int)$db->query('SELECT COUNT(*) FROM Artists')->fetch_row()[0]===$expectedArtists, 'failed import rolls back artist insertion');
     $incomplete=$importData; $incomplete['ready_for_import']=false;
     $blocked=false;
     try { t9_import($db,$incomplete,$backupDirectory); } catch (RuntimeException $e) { $blocked=true; }

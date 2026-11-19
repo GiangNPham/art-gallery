@@ -40,7 +40,7 @@ The project also demonstrates offline web scraping: PHP reads locally saved Wiki
 2. **Explore the collection** on `art-main.php`. Filter by artist, title or year.
 3. **Open a painting** to view its image, artist, year, medium, genres and available descriptive information.
 4. **Explore related records** through Artists, Galleries, Eras, Genres and Subjects.
-5. **Show offline scraping** at `scripts/scraping/preview.php`: three artists, five paintings per artist, extracted profile information and source links.
+5. **Show offline scraping** at `scripts/scraping/preview.php`: automatically detected saved artists, five paintings per artist, extracted profile information and source links.
 6. **Run the offline import**, refresh the gallery, and show that repeated imports reuse existing records.
 
 Additional seeded demonstration accounts are `user2/pass2`, `user3/pass3` and `user4/pass4`. These are local coursework accounts.
@@ -167,7 +167,7 @@ Windows and Linux instructions are documented for portability; runtime verificat
 
 ### Assignment scope and saved inputs
 
-The scraper selects **Edouard Manet, Lê Phổ and Trần Văn Cẩn**, with **five valid paintings per artist**. All extraction and testing use locally saved HTML and images. The scraper makes no live WikiArt requests and executes no page JavaScript.
+The scraper automatically detects artists from the WikiArt profile or all-works URLs stored inside the HTML files in `scripts/scraping/saved_pages/`, with **five valid paintings per artist**. The original demonstration uses **Edouard Manet, Lê Phổ and Trần Văn Cẩn**; additional saved artists, including **Andy Warhol**, are detected without editing PHP. All extraction and testing use locally saved HTML and images. The scraper makes no live WikiArt requests and executes no page JavaScript.
 
 To prepare inputs, manually open each artist's WikiArt profile in Chrome:
 
@@ -176,6 +176,10 @@ To prepare inputs, manually open each artist's WikiArt profile in Chrome:
 - https://www.wikiart.org/en/tran-van-can
 
 Expand biographies and scroll until images load, then choose **Save Page As → Webpage, Complete** into `scripts/scraping/saved_pages/`. Keep matching `_files` folders beside the HTML. Saved single-file HTML with embedded images is also supported. Save the all-works or detailed-list view when needed for additional paintings and metadata.
+
+For another artist, save their WikiArt profile or all-works page into the same folder and run the same scraper command. Filenames do not identify the artist; the saved `og:url` or canonical URL does. Multiple captures for the same artist are combined. Unsupported pages are skipped with a filename warning. No recognized artists, a missing artist name, or fewer than five valid paintings for any detected artist blocks import.
+
+You can also save individual painting pages in that folder. Their visible `itemprop="description"` text is matched to the selected paintings by the exact saved source URL and included in JSON, the preview and SQL import. Keep the artist profile or all-works captures too: a painting detail page enriches an already selected work and does not replace the five-painting selection. Artist biographies remain separate. Import fills empty database descriptions and preserves existing nonempty descriptions.
 
 Multiple captures for one artist are combined by saved source URL, not filename. A page labeled with an artwork count may contain fewer loaded cards; only paintings and images actually present in the saved files can be extracted.
 

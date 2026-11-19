@@ -10,6 +10,18 @@ function t9_class(string $class): string
 {
     return "contains(concat(' ', normalize-space(@class), ' '), ' $class ')";
 }
+function t9_artist_slug(?string $url): ?string
+{
+    // Recognize artist profiles and their all-works lists, not individual artwork pages.
+    return $url && preg_match('~\Ahttps://www\.wikiart\.org/en/([a-z0-9]+(?:-[a-z0-9]+)*)(?:/all-works(?:/[^?#]*)?)?/?(?:[?#].*)?\z~', $url, $match)
+        ? $match[1] : null;
+}
+function t9_painting_slug(?string $url): ?string
+{
+    return $url && !t9_artist_slug($url)
+        && preg_match('~\Ahttps://www\.wikiart\.org/en/([a-z0-9]+(?:-[a-z0-9]+)*)/[^/?#]+/?\z~', $url, $match)
+        ? $match[1] : null;
+}
 function t9_source(string $href, string $slug): ?string
 {
     if (str_starts_with($href, '/en/')) $href = 'https://www.wikiart.org' . $href;
@@ -31,7 +43,7 @@ function t9_parse(string $slug, string $label, string $input, string $images): a
 {
     $artist = ['slug'=>$slug, 'requested_name'=>$label, 'name'=>null, 'source'=>'https://www.wikiart.org/en/'.$slug,
         'birth_date'=>null, 'death_date'=>null, 'nationality'=>null, 'biography'=>null, 'pages'=>[], 'paintings'=>[], 'issues'=>[]];
-    $seen = []; $details = [];
+    $seen = []; $details = []; $descriptions = [];
     foreach (glob($input . '/*.html') ?: [] as $page) {
         $dom = new DOMDocument();
         $previous = libxml_use_internal_errors(true);
@@ -39,7 +51,17 @@ function t9_parse(string $slug, string $label, string $input, string $images): a
         libxml_clear_errors(); libxml_use_internal_errors($previous);
         $x = new DOMXPath($dom);
         $url = t9_text($x, '//meta[@property="og:url"]/@content') ?? t9_text($x, '//link[@rel="canonical"]/@href');
-        if (!$url || !preg_match('~^https://www\.wikiart\.org/en/'.preg_quote($slug,'~').'(/|$)~', $url)) continue;
+        if (t9_painting_slug($url) === $slug) {
+            // Painting pages enrich matching works; their text is never an artist biography.
+            $paragraphs=[];
+            foreach ($x->query('//*[@itemprop="description"][not(self::meta) and not(ancestor::*[@itemprop="description"])]') as $paragraph) {
+                $text=t9_text($x, '.', $paragraph);
+                if ($text !== null) $paragraphs[]=$text;
+            }
+            if ($paragraphs) $descriptions[$url]=['text'=>implode("\n\n",$paragraphs), 'page'=>basename($page)];
+            continue;
+        }
+        if (t9_artist_slug($url) !== $slug) continue;
         $artist['pages'][] = basename($page);
         // A detailed list can enrich paintings selected from any other saved page.
         foreach ($x->query('//*['.t9_class('wiki-detailed-item-container').']') as $entry) {
@@ -59,6 +81,7 @@ function t9_parse(string $slug, string $label, string $input, string $images): a
             $details[$source]=$info;
         }
         $name = t9_text($x, '//*[@itemprop="name"][self::h1 or self::h2]')
+            ?? t9_text($x, '//meta[@itemprop="name"]/@content')
             ?? t9_text($x, '//h1//a['.t9_class('artist-href').']')
             ?? t9_text($x, '//h1');
         if ($name) $artist['name'] = rtrim($name, ': ');
@@ -79,6 +102,7 @@ function t9_parse(string $slug, string $label, string $input, string $images): a
         }
         if ($bio) $artist['biography'] = $bio;
         foreach ($x->query('//a['.t9_class('artwork-name').' or '.t9_class('masonry-detailed-artwork-title').']') as $link) {
+            if (!($link instanceof DOMElement)) continue;
             $title = trim(preg_replace('/\s+/u', ' ', $link->textContent));
             $source = t9_source($link->getAttribute('href'), $slug);
             if (!$title || !$source || isset($seen[$source]) || count($artist['paintings']) >= 5) continue;
@@ -87,6 +111,7 @@ function t9_parse(string $slug, string $label, string $input, string $images): a
             if (!$card) continue;
             $bytes = null; $info = false;
             foreach ($x->query('.//img', $card) as $img) {
+                if (!($img instanceof DOMElement)) continue;
                 foreach (['src','data-src'] as $attr) {
                     $bytes = t9_image($img->getAttribute($attr), $page, $input);
                     $info = $bytes ? @getimagesizefromstring($bytes) : false;
@@ -115,6 +140,10 @@ function t9_parse(string $slug, string $label, string $input, string $images): a
     }
     foreach ($artist['paintings'] as &$painting) {
         $painting=array_merge($painting,$details[$painting['source']] ?? ['genres'=>[], 'description'=>null, 'medium'=>null, 'dimensions'=>null, 'style'=>null, 'original_title'=>null, 'detail_page'=>null, 'date_text'=>null]);
+        if (isset($descriptions[$painting['source']])) {
+            $painting['description']=$descriptions[$painting['source']]['text'];
+            $painting['description_page']=$descriptions[$painting['source']]['page'];
+        }
         if (!$painting['year'] && $painting['date_text'] && preg_match('/\b([1-9][0-9]{3})\b/',$painting['date_text'],$m)) $painting['year']=(int)$m[1];
     }
     unset($painting);
@@ -172,11 +201,33 @@ function t9_run(string $input, string $output, string $images): array
 {
     if (!is_dir($images) || !is_writable($images)) throw new RuntimeException('Gallery image folder is not writable.');
     if (!is_dir($output) && !mkdir($output, 0775, true)) throw new RuntimeException('Cannot create output folder.');
+    $slugs=[]; $paintingSlugs=[]; $issues=[];
+    foreach (glob($input . '/*.html') ?: [] as $page) {
+        $dom = new DOMDocument();
+        $previous = libxml_use_internal_errors(true);
+        $dom->loadHTML('<?xml encoding="UTF-8">' . file_get_contents($page), LIBXML_NONET);
+        libxml_clear_errors(); libxml_use_internal_errors($previous);
+        $x = new DOMXPath($dom);
+        $url = t9_text($x, '//meta[@property="og:url"]/@content') ?? t9_text($x, '//link[@rel="canonical"]/@href');
+        $slug = t9_artist_slug($url);
+        if ($slug) $slugs[$slug]=true;
+        elseif ($paintingSlug=t9_painting_slug($url)) $paintingSlugs[$paintingSlug]=true;
+        else $issues[]='Skipped '.basename($page).': no supported WikiArt artist or painting URL.';
+    }
+    foreach ($paintingSlugs as $slug=>$unused) {
+        if (!isset($slugs[$slug])) $issues[]='Painting details for '.$slug.' need a saved artist profile or all-works page too.';
+    }
+    ksort($slugs);
     $artists=[];
-    foreach (['edouard-manet'=>'Edouard Manet','le-pho'=>'Lê Phổ','tran-van-can'=>'Trần Văn Cẩn'] as $slug=>$label) $artists[]=t9_parse($slug,$label,$input,$images);
-    $ready = true;
+    foreach ($slugs as $slug=>$unused) {
+        $artist=t9_parse($slug,$slug,$input,$images);
+        $artist['requested_name']=$artist['name'] ?? $slug;
+        $artists[]=$artist;
+    }
+    if (!$artists) $issues[]='No saved WikiArt artist profiles or all-works pages found in saved_pages.';
+    $ready = count($artists) > 0;
     foreach ($artists as $a) if (!$a['name'] || count($a['paintings']) !== 5) $ready=false;
-    $data=['generated_at'=>date(DATE_ATOM),'ready_for_import'=>$ready,'artists'=>$artists];
+    $data=['generated_at'=>date(DATE_ATOM),'ready_for_import'=>$ready,'issues'=>$issues,'artists'=>$artists];
     if (file_put_contents($output.'/results.json', json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_THROW_ON_ERROR)) === false) throw new RuntimeException('Cannot write JSON.');
     $sql = $ready ? t9_sql($artists) : "-- INCOMPLETE INPUT: import blocked. See results.json for missing inputs. No INSERT statements generated.\n";
     if (file_put_contents($output.'/import.sql', $sql) === false) throw new RuntimeException('Cannot write SQL.');
@@ -227,6 +278,7 @@ if (PHP_SAPI === 'cli' && realpath($_SERVER['SCRIPT_FILENAME']) === __FILE__) {
     try {
         if (array_diff(array_slice($argv,1), ['--import'])) throw new RuntimeException('Usage: php scripts/scraping/scraper.php [--import]');
         $data=t9_run(__DIR__.'/saved_pages',__DIR__.'/output',dirname(__DIR__,2).'/images/art/works/square-medium');
+        foreach ($data['issues'] as $issue) echo '  - '.$issue."\n";
         foreach ($data['artists'] as $a) { echo $a['requested_name'].': '.count($a['paintings'])."/5 paintings\n"; foreach ($a['issues'] as $issue) echo "  - $issue\n"; }
         echo $data['ready_for_import'] ? "JSON and SQL generated. Review before import.\n" : "JSON generated; SQL import blocked by incomplete input.\n";
         if (in_array('--import',$argv,true)) {

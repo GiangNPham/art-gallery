@@ -9,6 +9,7 @@ $data = is_file($file) ? json_decode(file_get_contents($file), true) : null;
 <h1>Scraping preview</h1><p>This page reads generated JSON only. Source links identify saved material.</p>
 <?php if (!$data): ?><p>Run scripts/scraping/scraper.php to generate results.</p>
 <?php else: ?><p>Generated: <?= art_h($data['generated_at']) ?>. SQL: <?= $data['ready_for_import'] ? 'generated; review missing profile fields before import' : 'blocked: incomplete paintings' ?>.</p>
+<?php if (!empty($data['issues'])): ?><ul><?php foreach ($data['issues'] as $issue): ?><li><?= art_h($issue) ?></li><?php endforeach; ?></ul><?php endif; ?>
 <?php foreach ($data['artists'] as $a): ?><section>
 <h2><?= art_h($a['requested_name']) ?></h2><p>Saved-page name: <?= art_h($a['name'] ?? 'Missing') ?></p>
 <p>Born: <?= art_h($a['birth_date'] ?? 'Not found') ?> · Died: <?= art_h($a['death_date'] ?? 'Not found') ?> · Nationality: <?= art_h($a['nationality'] ?? 'Not found') ?></p>
