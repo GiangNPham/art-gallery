@@ -39,6 +39,12 @@ main, .nav-account { overflow-wrap: anywhere; }
 nav[aria-label] { align-items: flex-start; }
 .table-scroll { max-width: 100%; overflow-x: auto; margin-top: 16px; }
 .table-scroll table { margin-top: 0; }
+.paintings-table th, .paintings-table td:nth-child(n+4) { white-space: nowrap; }
+.paintings-table img { min-width: 80px; }
+@media (max-width: 700px) {
+    .paintings-table { min-width: 560px; }
+    .paintings-table td { overflow-wrap: break-word; }
+}
 .genres-table { table-layout: fixed; min-width: 640px; }
 .genres-table .genre-name-column { width: 180px; }
 .genres-table .genre-count-column { width: 100px; }

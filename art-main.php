@@ -109,7 +109,7 @@ art_header('Art Gallery');
 </form>
 <p>Showing <strong><?= $total ? number_format($offset + 1) . '–' . number_format($offset + $paintings->num_rows) : '0' ?></strong> of <strong><?= number_format($total) ?></strong> paintings</p>
 <div class="table-scroll" role="region" aria-label="Collection table" tabindex="0">
-<table>
+<table class="paintings-table">
     <thead>
         <tr>
             <th>Image</th>
