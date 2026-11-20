@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 art_csrf();
 $userid = art_post('userid');
-// Keep the password exactly as entered; escape only displayed text.
+// Keep the password exactly as entered; escape only displayed text
 $password = isset($_POST['password']) && is_string($_POST['password']) ? $_POST['password'] : '';
 $customer = art_check_credentials($userid, $password);
 if (!$customer) {
@@ -19,4 +19,5 @@ if (!$customer) {
 }
 art_sign_in($customer);
 header('Cache-Control: no-store');
-header('Location: art-main.php', true, 303);
+// Admins land on own main page; clients go to gallery
+header('Location: ' . ($customer['role'] === 'admin' ? 'admin.php' : 'art-main.php'), true, 303);
