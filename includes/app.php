@@ -1,5 +1,5 @@
 <?php
-// The gallery is self-contained
+// The gallery is self-contained so the artwork folder can be copied to htdocs.
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 function art_db(): mysqli
 {
@@ -49,13 +49,30 @@ function art_customer(): ?array
 }
 function art_require_login(): void
 {
-    if (!art_customer()) {
-        header('Cache-Control: no-store');
-        header('Location: art-login.php', true, 303);
-        exit;
+    $customer = art_customer();
+    if ($customer) {
+        // Task 10: re-check the account on every request, so a role change or a disabled
+        // account takes effect immediately instead of waiting for the person to sign out.
+        $accountId = (int) $customer['customer_id'];
+        $stmt = art_db()->prepare('SELECT l.Role, l.State, c.FirstName, c.LastName
+            FROM CustomerLogon l INNER JOIN Customers c ON c.CustomerID = l.CustomerID WHERE l.CustomerID = ?');
+        $stmt->bind_param('i', $accountId);
+        $stmt->execute();
+        $fresh = $stmt->get_result()->fetch_assoc();
+        if ($fresh && (int) $fresh['State'] === 1) {
+            $_SESSION['customer']['role'] = $fresh['Role'] === 'admin' ? 'admin' : 'client';
+            $_SESSION['customer']['first_name'] = (string) $fresh['FirstName'];
+            $_SESSION['customer']['last_name'] = (string) $fresh['LastName'];
+            return;
+        }
+        unset($_SESSION['customer']);
+        $_SESSION['flash'] = 'You were signed out because your account is no longer active.';
     }
+    header('Cache-Control: no-store');
+    header('Location: art-login.php', true, 303);
+    exit;
 }
-// Task 10: roles. An old session is client
+// Task 10: roles. A missing role (e.g. an old session) counts as a client.
 function art_is_admin(): bool
 {
     $customer = art_customer();
@@ -118,9 +135,9 @@ function art_header(string $title, string $active = 'collection'): void
     echo '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         . '<meta name="viewport" content="width=device-width, initial-scale=1"><title>' . art_h($title)
         . '</title><link rel="stylesheet" href="assets/gallery.css"></head><body>'
-        . '<h1>' . art_h($title) . '</h1><nav aria-label="Gallery navigation">';
+        . '<h1>' . art_h($title) . '</h1><nav>';
     if ($customer) {
-        echo '<div class="nav-links"><a href="art-main.php">Art Gallery</a><a href="artists.php">Artists</a><a href="galleries.php">Galleries</a><a href="painting-genres.php">Painting genres</a><a href="painting-subjects.php">Painting subjects</a><a href="eras.php">Eras</a><a href="genres.php">Genres</a><a href="subjects.php">Subjects</a><a href="collection-summary.php">Collection summary</a></div>'
+        echo '<div class="nav-links"><a href="art-main.php">Art Gallery</a> | <a href="artists.php">Artists</a> | <a href="galleries.php">Galleries</a> | <a href="painting-genres.php">Painting genres</a> | <a href="painting-subjects.php">Painting subjects</a> | <a href="eras.php">Eras</a> | <a href="genres.php">Genres</a> | <a href="subjects.php">Subjects</a> | <a href="collection-summary.php">Collection summary</a> | <a href="profile.php">My profile</a>' . (art_is_admin() ? ' | <a href="admin.php">Admin</a>' : '') . '</div>'
             . '<div class="nav-account">' . (art_is_admin() ? '<form class="logout-form" action="art-add.php" method="get"><button type="submit">ADD artwork</button></form>' : '') . '<span>'
             . art_h($customer['first_name'] . ' ' . $customer['last_name'])
             . ' (' . art_h($customer['userid']) . ')</span>'
@@ -156,7 +173,7 @@ function art_painting(int $id): ?array
     $stmt->execute();
     return $stmt->get_result()->fetch_assoc();
 }
-// Show a useful page for SQL failures, keeping server details in the error log.
+// page for SQL failures, keeping server details in the error log
 set_exception_handler(function (Throwable $error): void {
     error_log((string) $error);
     if (!headers_sent()) art_error(500, 'We could not complete that request', 'Please try again. Check the gallery database setup if the problem continues.');
